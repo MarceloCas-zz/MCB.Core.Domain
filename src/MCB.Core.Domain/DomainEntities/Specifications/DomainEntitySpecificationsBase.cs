@@ -4,9 +4,7 @@ using MCB.Core.Domain.Entities;
 
 namespace MCB.Core.Domain.DomainEntities.Specifications
 {
-    public abstract class DomainEntitySpecificationsBase<TDomainEntity>
-        : IDomainEntitySpecifications<TDomainEntity>
-        where TDomainEntity : DomainEntityBase
+    public abstract class DomainEntitySpecificationsBase
     {
         // Constants
         public const Severity ID_IS_REQUIRED_ERROR_SEVERITY = Severity.Error;
@@ -40,7 +38,12 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public const Severity REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_SEVERITY = Severity.Error;
         public const string REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE = "DOMAIN_ENTITY_REGISTRY_VERSION_SHOULD_BE_VALID";
         public const string REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_MESSAGE = "DomainEntity.RegistryVersion should be valid";
-
+    }
+    public abstract class DomainEntitySpecificationsBase<TDomainEntity>
+        : DomainEntitySpecificationsBase,
+        IDomainEntitySpecifications<TDomainEntity>
+        where TDomainEntity : DomainEntityBase
+    {
         // Private Methods
         private static bool CheckCreationInfoIsRequired(TDomainEntity domainEntity)
         {
