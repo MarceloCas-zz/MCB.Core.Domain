@@ -11,6 +11,23 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
     public class DomainEntitySpecificationsBaseTest
     {
         [Fact]
+        public void AddIdIsRequiredSpecification_Should_Pass()
+        {
+            // Arrange
+            var customer = new Customer();
+            customer.SetExistingInfoExposed(id: Guid.NewGuid());
+            var customerValidator = new CustomerValidator();
+
+            // Act
+            var validationResult = customerValidator.Validate(customer);
+
+            // Assert
+            validationResult.Should().NotBeNull();
+            validationResult.Errors.FirstOrDefault(
+                q => q.ErrorCode == DomainEntitySpecificationsBase.ID_IS_REQUIRED_ERROR_CODE
+            ).Should().BeNull();
+        }
+        [Fact]
         public void AddIdIsRequiredSpecification_Should_Not_Pass()
         {
             // Arrange
