@@ -45,7 +45,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public void AddIdIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity.Id)
-                .NotEqual(default(Guid))
+                .NotEqual(Guid.Empty)
                 .WithSeverity(ID_IS_REQUIRED_ERROR_SEVERITY)
                 .WithErrorCode(ID_IS_REQUIRED_ERROR_CODE)
                 .WithMessage(ID_IS_REQUIRED_ERROR_MESSAGE);
@@ -53,7 +53,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public void AddTenantIdIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity.TenantId)
-                .NotEqual(default(Guid))
+                .NotEqual(Guid.Empty)
                 .WithSeverity(TENANT_ID_IS_REQUIRED_ERROR_SEVERITY)
                 .WithErrorCode(TENANT_ID_IS_REQUIRED_ERROR_CODE)
                 .WithMessage(TENANT_ID_IS_REQUIRED_ERROR_MESSAGE);
