@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -8,5 +8,10 @@
 		<Authors>Marcelo Castelo Branco</Authors>
 		<Company>MCB</Company>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="MCB.Core.Domain.Abstractions" Version="0.1.0-alpha" />
+	  <PackageReference Include="MCB.Core.Domain.Entities" Version="0.2.0-alpha" />
+	</ItemGroup>
 
 </Project>
