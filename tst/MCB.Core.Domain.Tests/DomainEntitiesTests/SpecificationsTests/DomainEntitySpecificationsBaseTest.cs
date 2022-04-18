@@ -53,22 +53,22 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         public void SetExistingInfoExposed(
             Guid id = default, 
             Guid tenantId = default, 
-            string createdBy = default, 
+            string? createdBy = default, 
             DateTimeOffset createdAt = default, 
-            string updatedBy = default, 
+            string? updatedBy = default, 
             DateTimeOffset? updatedAt = default, 
-            string sourcePlatform = default, 
+            string? sourcePlatform = default, 
             DateTimeOffset registryVersion = default
         )
         {
             SetExistingInfo(
                 id,
                 tenantId,
-                createdBy,
+                createdBy ?? string.Empty,
                 createdAt,
-                updatedBy,
+                updatedBy ?? string.Empty,
                 updatedAt,
-                sourcePlatform,
+                sourcePlatform ?? string.Empty,
                 registryVersion
             );
         }
