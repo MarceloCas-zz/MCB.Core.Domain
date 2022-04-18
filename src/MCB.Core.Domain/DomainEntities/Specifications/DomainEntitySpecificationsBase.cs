@@ -41,6 +41,24 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public const string REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE = "DOMAIN_ENTITY_REGISTRY_VERSION_SHOULD_BE_VALID";
         public const string REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_MESSAGE = "DomainEntity.RegistryVersion should be valid";
 
+        // Private Methods
+        private static bool CheckCreationInfoIsRequired(TDomainEntity domainEntity)
+        {
+            return domainEntity != null
+                && domainEntity.AuditableInfo.CreatedAt > default(DateTimeOffset)
+                && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.CreatedBy);
+        }
+        private static bool CheckUpdateInfoIsRequired(TDomainEntity domainEntity)
+        {
+            return domainEntity != null
+                && domainEntity.AuditableInfo.UpdatedAt > default(DateTimeOffset)
+                && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.UpdatedBy);
+        }
+        private static bool CheckRegistryVersionIsRequired(DateTimeOffset registryVersion)
+        {
+            return registryVersion > default(DateTimeOffset);
+        }
+
         // Public Methods
         public void AddIdIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
@@ -61,15 +79,12 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public void AddCreationInfoIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity)
-                .Must(domainEntity =>
-                    domainEntity != null
-                    && domainEntity.AuditableInfo.CreatedAt > default(DateTimeOffset)
-                    && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.CreatedBy)
-                )
-                .WithSeverity(CREATION_INFO_IS_REQUIRED_ERROR_SEVERITY)
-                .WithErrorCode(CREATION_INFO_IS_REQUIRED_ERROR_CODE)
-                .WithMessage(CREATION_INFO_IS_REQUIRED_ERROR_MESSAGE);
+                .Must(domainEntity => CheckCreationInfoIsRequired(domainEntity))
+                .WithSeverity(DomainEntitySpecificationsBase<TDomainEntity>.CREATION_INFO_IS_REQUIRED_ERROR_SEVERITY)
+                .WithErrorCode(DomainEntitySpecificationsBase<TDomainEntity>.CREATION_INFO_IS_REQUIRED_ERROR_CODE)
+                .WithMessage(DomainEntitySpecificationsBase<TDomainEntity>.CREATION_INFO_IS_REQUIRED_ERROR_MESSAGE);
         }
+
         public void AddCreationInfoIsValidSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity)
@@ -77,11 +92,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                     domainEntity.AuditableInfo.CreatedAt <= DateTimeOffset.UtcNow
                     && domainEntity.AuditableInfo.CreatedBy.Length <= 250
                 )
-                .When(domainEntity =>
-                    domainEntity != null
-                    && domainEntity.AuditableInfo.CreatedAt > default(DateTimeOffset)
-                    && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.CreatedBy)
-                )
+                .When(domainEntity => CheckCreationInfoIsRequired(domainEntity))
                 .WithSeverity(CREATION_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
                 .WithErrorCode(CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE)
                 .WithMessage(CREATION_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
@@ -89,14 +100,10 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public void AddUpdateInfoIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity)
-                .Must(domainEntity =>
-                    domainEntity != null
-                    && domainEntity.AuditableInfo.UpdatedAt > default(DateTimeOffset)
-                    && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.UpdatedBy)
-                )
-                .WithSeverity(UPDATE_INFO_IS_REQUIRED_ERROR_SEVERITY)
-                .WithErrorCode(UPDATE_INFO_IS_REQUIRED_ERROR_CODE)
-                .WithMessage(UPDATE_INFO_IS_REQUIRED_ERROR_MESSAGE);
+                .Must(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
+                .WithSeverity(DomainEntitySpecificationsBase<TDomainEntity>.UPDATE_INFO_IS_REQUIRED_ERROR_SEVERITY)
+                .WithErrorCode(DomainEntitySpecificationsBase<TDomainEntity>.UPDATE_INFO_IS_REQUIRED_ERROR_CODE)
+                .WithMessage(DomainEntitySpecificationsBase<TDomainEntity>.UPDATE_INFO_IS_REQUIRED_ERROR_MESSAGE);
         }
         public void AddUpdateInfoIsValidSpecification(AbstractValidator<TDomainEntity> validator)
         {
@@ -106,11 +113,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                     && domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
                     && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.UpdatedBy)
                 )
-                .When(domainEntity =>
-                    domainEntity != null
-                    && domainEntity.AuditableInfo.UpdatedAt > default(DateTimeOffset)
-                    && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.UpdatedBy)
-                )
+                .When(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
                 .WithSeverity(UPDATE_INFO_IS_REQUIRED_ERROR_SEVERITY)
                 .WithErrorCode(UPDATE_INFO_IS_REQUIRED_ERROR_CODE)
                 .WithMessage(UPDATE_INFO_IS_REQUIRED_ERROR_MESSAGE);
@@ -118,10 +121,10 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         public void AddRegistryVersionIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity.RegistryVersion)
-                .Must(registryVersion => registryVersion > default(DateTimeOffset))
-                .WithSeverity(REGISTRY_VERSION_IS_REQUIRED_ERROR_SEVERITY)
-                .WithErrorCode(REGISTRY_VERSION_IS_REQUIRED_ERROR_CODE)
-                .WithMessage(REGISTRY_VERSION_IS_REQUIRED_ERROR_MESSAGE);
+                .Must(registryVersion => CheckRegistryVersionIsRequired(registryVersion))
+                .WithSeverity(DomainEntitySpecificationsBase<TDomainEntity>.REGISTRY_VERSION_IS_REQUIRED_ERROR_SEVERITY)
+                .WithErrorCode(DomainEntitySpecificationsBase<TDomainEntity>.REGISTRY_VERSION_IS_REQUIRED_ERROR_CODE)
+                .WithMessage(DomainEntitySpecificationsBase<TDomainEntity>.REGISTRY_VERSION_IS_REQUIRED_ERROR_MESSAGE);
         }
         public void AddRegistryVersionIsValidSpecification(AbstractValidator<TDomainEntity> validator)
         {
@@ -130,7 +133,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                     domainEntity.RegistryVersion <= DateTimeOffset.UtcNow
                     && domainEntity.RegistryVersion >= domainEntity.AuditableInfo.UpdatedAt
                 )
-                .When(domainEntity => domainEntity.RegistryVersion > default(DateTimeOffset))
+                .When(domainEntity => CheckRegistryVersionIsRequired(domainEntity.RegistryVersion))
                 .WithSeverity(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_SEVERITY)
                 .WithErrorCode(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE)
                 .WithMessage(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_MESSAGE);
