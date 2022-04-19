@@ -77,6 +77,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                 .WithErrorCode(TENANT_ID_IS_REQUIRED_ERROR_CODE)
                 .WithMessage(TENANT_ID_IS_REQUIRED_ERROR_MESSAGE);
         }
+        
         public void AddCreationInfoIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity)
@@ -85,7 +86,6 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                 .WithErrorCode(CREATION_INFO_IS_REQUIRED_ERROR_CODE)
                 .WithMessage(CREATION_INFO_IS_REQUIRED_ERROR_MESSAGE);
         }
-
         public void AddCreationInfoIsValidSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity)
@@ -98,6 +98,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                 .WithErrorCode(CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE)
                 .WithMessage(CREATION_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
         }
+        
         public void AddUpdateInfoIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity)
@@ -110,15 +111,16 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         {
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
-                    domainEntity != null
-                    && domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.UpdatedBy)
+                    domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
+                    && domainEntity.AuditableInfo.UpdatedAt <= DateTimeOffset.UtcNow
+                    && domainEntity.AuditableInfo.UpdatedBy?.Length <= 250
                 )
                 .When(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
-                .WithSeverity(UPDATE_INFO_IS_REQUIRED_ERROR_SEVERITY)
-                .WithErrorCode(UPDATE_INFO_IS_REQUIRED_ERROR_CODE)
-                .WithMessage(UPDATE_INFO_IS_REQUIRED_ERROR_MESSAGE);
+                .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
+                .WithErrorCode(UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE)
+                .WithMessage(UPDATE_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
         }
+        
         public void AddRegistryVersionIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity.RegistryVersion)
