@@ -1,7 +1,7 @@
 
 # MCB.Core.Domain
 
-This project is a source code of [MCB.Core.Domain](https://www.nuget.org/packages/MCB.Core.Domain/) nuget package. This package contains the implementations of [MCB.Core.Domain.Abstractions](https://www.nuget.org/packages/MCB.Core.Domain.Abstractions/) nuget package thats contains abstractions for some design patterns.
+This project is a source code of [MCB.Core.Domain](https://www.nuget.org/packages/MCB.Core.Domain/) nuget package. This package contains the implementations of [MCB.Core.Domain.Abstractions](https://www.nuget.org/packages/MCB.Core.Domain.Abstractions/) nuget package thats contains domain base objects.
 
 
 ## Labels
