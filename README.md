@@ -36,7 +36,7 @@ This project is a source code of [MCB.Core.Domain](https://www.nuget.org/package
 
 ## Features
 
-- Empty
+- Domain Entity Base specifications
 
 
 ## Used stack
