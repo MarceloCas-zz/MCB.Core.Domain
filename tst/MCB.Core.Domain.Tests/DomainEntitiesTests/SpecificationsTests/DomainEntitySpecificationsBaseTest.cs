@@ -200,7 +200,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             customerB.SetExistingInfoExposed(
                 createdAt: customerBCreatedAt,
                 updatedAt: customerBCreatedAt,
-                updatedBy: "marcelo.castelo@outlook.com"
+                updatedBy: new string('a', 250)
             );
             var customerValidator = new CustomerValidator();
 

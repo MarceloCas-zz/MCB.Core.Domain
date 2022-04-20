@@ -112,7 +112,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
                     domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    && domainEntity.AuditableInfo.UpdatedAt <= DateTimeOffset.UtcNow
+                    && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
                     #pragma warning disable CS8602 // Dereference of a possibly null reference.
                     // The method CheckUpdateInfoIsRequired has check if domainEntity.AuditableInfo.UpdatedBy is null
                     && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
