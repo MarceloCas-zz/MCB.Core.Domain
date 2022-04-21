@@ -195,21 +195,33 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             var customerValidator = new CustomerValidator();
 
             var customerCollection = new Customer[] {
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: DateTimeOffset.UtcNow.AddDays(-1),
                     updatedAt: DateTimeOffset.UtcNow,
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                // && domainEntity.AuditableInfo.UpdatedBy.Length = 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: DateTimeOffset.UtcNow.AddDays(-1),
                     updatedAt: DateTimeOffset.UtcNow,
                     updatedBy: new string('a', 250)
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt = domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
                     updatedAt: referenceDate,
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt = domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                // && domainEntity.AuditableInfo.UpdatedBy.Length = 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
                     updatedAt: referenceDate,
@@ -239,31 +251,41 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             var customerValidator = new CustomerValidator();
 
             var customerCollection = new Customer[] {
+                // domainEntity.AuditableInfo.UpdatedAt < domainEntity.AuditableInfo.CreatedAt
                 new Customer().SetExistingInfoExposed(
                     createdAt: DateTimeOffset.UtcNow,
                     updatedAt: DateTimeOffset.UtcNow.AddDays(-1),
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt > DateTimeOffset.UtcNow
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-1),
                     updatedAt: referenceDate.AddDays(1),
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt = domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt > DateTimeOffset.UtcNow
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(1),
                     updatedAt: referenceDate.AddDays(1),
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-1),
                     updatedAt: referenceDate,
                     updatedBy: new string('a', 251)
                 ),
+                // domainEntity.AuditableInfo.UpdatedAt < domainEntity.AuditableInfo.CreatedAt
                 new Customer().SetExistingInfoExposed(
-                    createdAt: referenceDate,
-                    updatedAt: referenceDate,
+                    createdAt: DateTimeOffset.UtcNow,
+                    updatedAt: DateTimeOffset.UtcNow.AddDays(-1),
                     updatedBy: new string('a', 251)
                 ),
+
             };
             var validationResultCollection = new ValidationResult[customerCollection.Length];
 
