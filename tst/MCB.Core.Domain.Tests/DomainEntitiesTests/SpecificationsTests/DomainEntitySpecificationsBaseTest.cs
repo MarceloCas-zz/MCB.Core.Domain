@@ -226,6 +226,18 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     createdAt: referenceDate,
                     updatedAt: referenceDate,
                     updatedBy: new string('a', 250)
+                ),
+                // When CheckUpdateInfoIsRequired failed
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: default,
+                    updatedBy: string.Empty
+                ),
+                // When CheckUpdateInfoIsRequired failed
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate,
+                    updatedBy: string.Empty
                 )
             };
             var validationResultCollection = new ValidationResult[customerCollection.Length];
@@ -279,7 +291,6 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedAt: referenceDate,
                     updatedBy: new string('a', 251)
                 )
-
             };
             var validationResultCollection = new ValidationResult[customerCollection.Length];
 
