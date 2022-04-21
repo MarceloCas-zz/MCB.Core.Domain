@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using FluentValidation;
+using FluentValidation.Results;
 using MCB.Core.Domain.DomainEntities.Specifications;
 using MCB.Core.Domain.Entities;
 using System;
@@ -190,115 +191,94 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         public void AddUpdateInfoIsValidSpecification_Should_Pass()
         {
             // Arrange
-            var customerA = new Customer();
-            customerA.SetExistingInfoExposed(
-                updatedAt: DateTime.UtcNow,
-                updatedBy: "marcelo.castelo@outlook.com"
-            );
-            var customerB = new Customer();
-            var customerBCreatedAt = DateTimeOffset.UtcNow;
-            customerB.SetExistingInfoExposed(
-                createdAt: customerBCreatedAt,
-                updatedAt: customerBCreatedAt,
-                updatedBy: "marcelo.castelo@outlook.com"
-            );
-            var customerC = new Customer();
-            customerC.SetExistingInfoExposed(
-                updatedAt: DateTime.UtcNow,
-                updatedBy: new string('a', 250)
-            );
-            var customerD = new Customer();
-            var customerDCreatedAt = DateTimeOffset.UtcNow;
-            customerD.SetExistingInfoExposed(
-                createdAt: customerDCreatedAt,
-                updatedAt: customerDCreatedAt,
-                updatedBy: new string('a', 250)
-            );
+            var referenceDate = DateTimeOffset.UtcNow;
             var customerValidator = new CustomerValidator();
 
+            var customerCollection = new Customer[] {
+                new Customer().SetExistingInfoExposed(
+                    createdAt: DateTimeOffset.UtcNow.AddDays(-1),
+                    updatedAt: DateTimeOffset.UtcNow,
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: DateTimeOffset.UtcNow.AddDays(-1),
+                    updatedAt: DateTimeOffset.UtcNow,
+                    updatedBy: new string('a', 250)
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate,
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate,
+                    updatedBy: new string('a', 250)
+                )
+            };
+            var validationResultCollection = new ValidationResult[customerCollection.Length];
+
             // Act
-            var validationResultA = customerValidator.Validate(customerA);
-            var validationResultB = customerValidator.Validate(customerB);
-            var validationResultC = customerValidator.Validate(customerC);
-            var validationResultD = customerValidator.Validate(customerD);
+            for (int i = 0; i < customerCollection.Length; i++)
+                validationResultCollection[i] = customerValidator.Validate(customerCollection[i]);
 
             // Assert
-            validationResultA.Should().NotBeNull();
-            validationResultA.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().BeNull();
-
-            validationResultB.Should().NotBeNull();
-            validationResultB.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().BeNull();
-
-            validationResultC.Should().NotBeNull();
-            validationResultC.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().BeNull();
-
-            validationResultD.Should().NotBeNull();
-            validationResultD.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().BeNull();
+            foreach (var validationResult in validationResultCollection)
+            {
+                validationResult.Should().NotBeNull();
+                validationResult.Errors.FirstOrDefault(
+                    q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
+                ).Should().BeNull();
+            }
         }
         [Fact]
         public void AddUpdateInfoIsValidSpecification_Should_Not_Pass()
         {
             // Arrange
-            var customerA = new Customer();
-            customerA.SetExistingInfoExposed(
-                createdAt: DateTimeOffset.UtcNow.AddDays(-1),
-                updatedAt: DateTimeOffset.UtcNow.AddDays(-2),
-                updatedBy: "marcelo.castelo@outlook.com"
-            );
-            var customerB = new Customer();
-            customerB.SetExistingInfoExposed(
-                createdAt: DateTimeOffset.UtcNow.AddDays(-1),
-                updatedAt: DateTimeOffset.UtcNow.AddDays(1),
-                updatedBy: "marcelo.castelo@outlook.com"
-            );
-            var customerC = new Customer();
-            customerC.SetExistingInfoExposed(
-                createdAt: DateTimeOffset.UtcNow.AddDays(1),
-                updatedAt: DateTimeOffset.UtcNow.AddDays(1),
-                updatedBy: "marcelo.castelo@outlook.com"
-            );
-            var customerD = new Customer();
-            customerD.SetExistingInfoExposed(
-                createdAt: DateTimeOffset.UtcNow.AddDays(-1),
-                updatedAt: DateTimeOffset.UtcNow.AddDays(1),
-                updatedBy: new string('a', 251)
-            );
+            var referenceDate = DateTimeOffset.UtcNow;
             var customerValidator = new CustomerValidator();
 
+            var customerCollection = new Customer[] {
+                new Customer().SetExistingInfoExposed(
+                    createdAt: DateTimeOffset.UtcNow,
+                    updatedAt: DateTimeOffset.UtcNow.AddDays(-1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate.AddDays(1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(1),
+                    updatedAt: referenceDate.AddDays(1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate,
+                    updatedBy: new string('a', 251)
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate,
+                    updatedBy: new string('a', 251)
+                ),
+            };
+            var validationResultCollection = new ValidationResult[customerCollection.Length];
+
             // Act
-            var validationResultA = customerValidator.Validate(customerA);
-            var validationResultB = customerValidator.Validate(customerB);
-            var validationResultC = customerValidator.Validate(customerC);
-            var validationResultD = customerValidator.Validate(customerD);
+            for (int i = 0; i < customerCollection.Length; i++)
+                validationResultCollection[i] = customerValidator.Validate(customerCollection[i]);
 
             // Assert
-            validationResultA.Should().NotBeNull();
-            validationResultA.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().NotBeNull();
-
-            validationResultB.Should().NotBeNull();
-            validationResultB.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().NotBeNull();
-
-            validationResultC.Should().NotBeNull();
-            validationResultC.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().NotBeNull();
-
-            validationResultD.Should().NotBeNull();
-            validationResultD.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-            ).Should().NotBeNull();
+            foreach (var validationResult in validationResultCollection)
+            {
+                validationResult.Should().NotBeNull();
+                validationResult.Errors.FirstOrDefault(
+                    q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
+                ).Should().NotBeNull();
+            }
         }
 
         [Fact]
@@ -399,7 +379,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
     public class Customer 
         : DomainEntityBase
     {
-        public void SetExistingInfoExposed(
+        public Customer SetExistingInfoExposed(
             Guid id = default, 
             Guid tenantId = default, 
             string? createdBy = default, 
@@ -420,6 +400,8 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                 sourcePlatform ?? string.Empty,
                 registryVersion
             );
+
+            return this;
         }
     }
     public class CustomerSpecifications
