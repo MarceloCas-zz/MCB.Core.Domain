@@ -4,10 +4,6 @@ using MCB.Core.Domain.DomainEntities.Specifications;
 using MCB.Core.Domain.DomainEntities.Validators;
 using MCB.Core.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
