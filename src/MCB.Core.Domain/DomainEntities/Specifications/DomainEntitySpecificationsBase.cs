@@ -113,11 +113,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                 .Must(domainEntity =>
                     domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
                     && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
-                    #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    // The method CheckUpdateInfoIsRequired has check if domainEntity.AuditableInfo.UpdatedBy is null
                     && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
-                    #pragma warning restore CS8602 // Dereference of a possibly null reference.
-
                 )
                 .When(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
                 .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)

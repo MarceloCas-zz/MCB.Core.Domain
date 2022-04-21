@@ -278,13 +278,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     createdAt: referenceDate.AddDays(-1),
                     updatedAt: referenceDate,
                     updatedBy: new string('a', 251)
-                ),
-                // domainEntity.AuditableInfo.UpdatedAt < domainEntity.AuditableInfo.CreatedAt
-                new Customer().SetExistingInfoExposed(
-                    createdAt: DateTimeOffset.UtcNow,
-                    updatedAt: DateTimeOffset.UtcNow.AddDays(-1),
-                    updatedBy: new string('a', 251)
-                ),
+                )
 
             };
             var validationResultCollection = new ValidationResult[customerCollection.Length];
