@@ -109,6 +109,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         }
         public void AddUpdateInfoIsValidSpecification(AbstractValidator<TDomainEntity> validator)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
                     domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
@@ -119,6 +120,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                 .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
                 .WithErrorCode(UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE)
                 .WithMessage(UPDATE_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
         
         public void AddRegistryVersionIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
