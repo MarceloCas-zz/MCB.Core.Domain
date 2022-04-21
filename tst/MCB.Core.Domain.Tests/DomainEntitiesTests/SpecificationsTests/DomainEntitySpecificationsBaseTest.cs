@@ -350,19 +350,25 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         public void AddRegistryVersionIsValidSpecification_Should_Pass()
         {
             // Arrange
-            var customer = new Customer();
-            customer.SetExistingInfoExposed(
+            var customerValidator = new CustomerValidator();
+            var customerA = new Customer();
+            customerA.SetExistingInfoExposed(
                 updatedAt: DateTimeOffset.UtcNow.AddDays(-2),
                 registryVersion: DateTimeOffset.UtcNow.AddDays(-1)
             );
-            var customerValidator = new CustomerValidator();
+            var customerB = new Customer();
+            customerB.SetExistingInfoExposed(
+                updatedAt: null,
+                registryVersion: DateTimeOffset.UtcNow.AddDays(-1)
+            );
 
             // Act
-            var validationResult = customerValidator.Validate(customer);
+            var validationResultA = customerValidator.Validate(customerA);
+            var validationResultB = customerValidator.Validate(customerB);
 
             // Assert
-            validationResult.Should().NotBeNull();
-            validationResult.Errors.FirstOrDefault(
+            validationResultB.Should().NotBeNull();
+            validationResultB.Errors.FirstOrDefault(
                 q => q.ErrorCode == DomainEntitySpecificationsBase.REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE
             ).Should().BeNull();
         }
