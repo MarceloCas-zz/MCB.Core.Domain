@@ -136,7 +136,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
                     domainEntity.RegistryVersion <= DateTimeOffset.UtcNow
-                    && domainEntity.RegistryVersion >= domainEntity.AuditableInfo.UpdatedAt
+                    && domainEntity.RegistryVersion >= (domainEntity.AuditableInfo.UpdatedAt ?? default)
                 )
                 .When(domainEntity => CheckRegistryVersionIsRequired(domainEntity.RegistryVersion))
                 .WithSeverity(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_SEVERITY)
