@@ -10,10 +10,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="MCB.Core.Domain.Abstractions" Version="0.3.0-alpha" />
+	  <PackageReference Include="MCB.Core.Domain.Abstractions" Version="0.4.0-alpha" />
 	  <PackageReference Include="MCB.Core.Domain.Entities" Version="0.2.0-alpha" />
 	  <PackageReference Include="MCB.Core.Infra.CrossCutting.DesignPatterns" Version="0.7.0-alpha" />
 	  <PackageReference Include="MCB.Core.Infra.CrossCutting.DesignPatterns.Validator" Version="0.2.0-alpha" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="DomainNotifications\" />
 	</ItemGroup>
 
 </Project>

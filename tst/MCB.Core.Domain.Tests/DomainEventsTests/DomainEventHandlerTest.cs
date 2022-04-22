@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using MCB.Core.Domain.DomainEvents;
+using MCB.Core.Domain.Abstractions.DomainEvents.Models;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Observer;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Observer;
 using System;

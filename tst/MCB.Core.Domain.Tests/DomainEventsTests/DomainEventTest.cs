@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using MCB.Core.Domain.Abstractions.DomainEvents.Models;
 using MCB.Core.Domain.DomainEvents;
 using System;
 using Xunit;
