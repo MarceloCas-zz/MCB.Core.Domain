@@ -11,7 +11,7 @@ using Xunit;
 
 namespace MCB.Core.Domain.Tests.DomainEventsTests
 {
-    public class DomainEventHandlerTest
+    public class DomainEventHandlerBaseTest
     {
         [Fact]
         public async Task DomainEventHandler_Should_Handler_Domain_Events()
