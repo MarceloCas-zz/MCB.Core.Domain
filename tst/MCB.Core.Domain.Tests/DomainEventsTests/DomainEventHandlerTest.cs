@@ -49,7 +49,11 @@ namespace MCB.Core.Domain.Tests.DomainEventsTests
     {
         protected override ISubscriber<TSubject> InstanciateSubscriber<TSubject>(Type subscriberType)
         {
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             return (ISubscriber<TSubject>)Activator.CreateInstance(subscriberType);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8603 // Possible null reference return.
         }
     }
     public class DomainEventHandler
