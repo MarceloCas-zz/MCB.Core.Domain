@@ -33,6 +33,7 @@ namespace MCB.Core.Domain.Tests.DomainEventsTests
 
             // Assert
             domainEventHandler.RaisedDomainEventsCollection.Should().BeEmpty();
+            domainEventHandler.HasDomainEvents().Should().BeFalse();
             domainEventToSendCollection.Should().HaveCount(DomainEventHandler.ReceivedDomainEventCollection.Count);
             for (int i = 0; i < domainEventToSendCollection.Count; i++)
             {

@@ -9,7 +9,7 @@ namespace MCB.Core.Domain.DomainEvents
         public Guid EventId { get; set; }
         public Guid CorrelationId { get; set; }
         public DateTimeOffset TimeStamp { get; set; }
-        public string EventType { get; set; }
+        public string? EventType { get; set; }
         public string EventSchema { get; set; }
         public Guid TenantId { get; set; }
         public string ExecutionUser { get; set; }
@@ -20,7 +20,7 @@ namespace MCB.Core.Domain.DomainEvents
         {
             EventId = Guid.NewGuid();
             TimeStamp = DateTimeOffset.UtcNow;
-            EventType = GetType()?.FullName ?? string.Empty;
+            EventType = GetType().FullName;
             EventSchema = string.Empty;
             ExecutionUser = string.Empty;
             SourcePlatform = string.Empty;
