@@ -25,7 +25,7 @@ namespace MCB.Core.Domain.Tests.Fixtures
         }
 
         // Private Methods
-        private void ConfigureServices(IServiceCollection services)
+        private static void ConfigureServices(IServiceCollection services)
         {
             IoC.Bootstrapper.ConfigureServices(services);
             services.AddScoped<ICustomerDomainService, CustomerDomainService>();

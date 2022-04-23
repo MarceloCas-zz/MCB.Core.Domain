@@ -21,6 +21,13 @@ namespace MCB.Core.Domain.DomainServices
             _domainEventPublisher = domainEventPublisher;
         }
 
+        // Private Methods
+        private static void ValidateEventData<TEventData>(TEventData eventData)
+        {
+            if (eventData is null)
+                throw new ArgumentNullException(nameof(eventData));
+        }
+
         // Protected Methods
         protected async Task RaiseDomainEventAsync<TEventData>(
             Guid tenantId,
@@ -31,10 +38,12 @@ namespace MCB.Core.Domain.DomainServices
             CancellationToken cancellationToken
         )
         {
-            if(eventData is null)
-                throw new ArgumentNullException(nameof(eventData));
+            ValidateEventData(eventData);
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            // ValidateEventData method check is eventData is null
             var eventDataType = eventData.GetType();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             var domainEvent = new DomainEvent
             {
