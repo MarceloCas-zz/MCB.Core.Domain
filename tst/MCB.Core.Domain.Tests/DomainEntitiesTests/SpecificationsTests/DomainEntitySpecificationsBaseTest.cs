@@ -413,13 +413,13 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         : DomainEntityBase
     {
         public Customer SetExistingInfoExposed(
-            Guid id = default, 
+            Guid id = default,
             Guid tenantId = default, 
-            string? createdBy = default, 
+            string createdBy = default, 
             DateTimeOffset createdAt = default, 
-            string? updatedBy = default, 
+            string updatedBy = default, 
             DateTimeOffset? updatedAt = default, 
-            string? sourcePlatform = default, 
+            string sourcePlatform = default, 
             DateTimeOffset registryVersion = default
         )
         {
