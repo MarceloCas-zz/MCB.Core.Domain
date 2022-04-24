@@ -13,13 +13,13 @@ using Xunit;
 namespace MCB.Core.Domain.Tests.DomainNotificationsTests
 {
     [Collection(nameof(DefaultFixture))]
-    public class DomainNotificationHandlerBaseTest
+    public class DomainNotificationHandlerTest
     {
         // Fields
         private readonly DefaultFixture _defaultFixture;
 
         // Constructors
-        public DomainNotificationHandlerBaseTest(DefaultFixture defaultFixture)
+        public DomainNotificationHandlerTest(DefaultFixture defaultFixture)
         {
             _defaultFixture = defaultFixture;
         }
