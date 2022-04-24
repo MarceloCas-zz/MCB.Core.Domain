@@ -20,7 +20,7 @@ namespace MCB.Core.Domain.Tests.Fixtures
         // Constructors
         public DefaultFixture()
         {
-            TimeProvider.InjectedUtcNow = DateTimeOffset.UtcNow;
+            TimeProvider.InjectedUtcNow = new DateTimeOffset(DateTime.SpecifyKind(new DateTime(2022, 1, 1), DateTimeKind.Utc));
 
             var services = new ServiceCollection();
             ConfigureServices(services);
