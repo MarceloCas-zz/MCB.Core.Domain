@@ -289,65 +289,88 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                 ).Should().BeNull();
             }
         }
-        //[Fact]
-        //public void AddUpdateInfoIsValidSpecification_Should_Not_Pass()
-        //{
-        //    // Arrange
-        //    var customerValidator = new CustomerValidator();
-        //    var referenceDate = TimeProvider.GetUtcNow();
+        [Fact]
+        public void AddUpdateInfoIsValidSpecification_Should_Not_Pass()
+        {
+            // Arrange
+            var customerValidator = new CustomerValidator();
+            var referenceDate = TimeProvider.GetUtcNow();
 
-        //    var customerCollection = new Customer[] {
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate,
-        //            updatedAt: referenceDate.AddDays(-1),
-        //            updatedBy: "marcelo.castelo@outlook.com"
-        //        ),
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate.AddDays(-1),
-        //            updatedAt: referenceDate.AddDays(1),
-        //            updatedBy: "marcelo.castelo@outlook.com"
-        //        ),
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate.AddDays(1),
-        //            updatedAt: referenceDate.AddDays(1),
-        //            updatedBy: "marcelo.castelo@outlook.com"
-        //        ),
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate.AddDays(-1),
-        //            updatedAt: referenceDate,
-        //            updatedBy: new string('a', 251)
-        //        ),
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate.AddDays(-1),
-        //            updatedAt: referenceDate.AddDays(-1),
-        //            updatedBy: new string('a', 251)
-        //        ),
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate.AddDays(-2),
-        //            updatedAt: referenceDate.AddDays(-1),
-        //            updatedBy: new string('a', 251)
-        //        ),
-        //        new Customer().SetExistingInfoExposed(
-        //            createdAt: referenceDate,
-        //            updatedAt: referenceDate,
-        //            updatedBy: new string('a', 251)
-        //        )
-        //    };
-        //    var validationResultCollection = new ValidationResult[customerCollection.Length];
+            /*
+            domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
+            && domainEntity.AuditableInfo.UpdatedAt <= TimeProvider.GetUtcNow()
+            && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
+             */
 
-        //    // Act
-        //    for (int i = 0; i < customerCollection.Length; i++)
-        //        validationResultCollection[i] = customerValidator.Validate(customerCollection[i]);
+            var customerCollection = new Customer[] {
+                // domainEntity.AuditableInfo.UpdatedAt < domainEntity.AuditableInfo.CreatedAt
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate.AddDays(-1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt > TimeProvider.GetUtcNow()
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate.AddDays(1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt > TimeProvider.GetUtcNow()
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(1),
+                    updatedAt: referenceDate.AddDays(1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-2),
+                    updatedAt: referenceDate.AddDays(-1),
+                    updatedBy: new string('a', 251)
+                ),
+                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate,
+                    updatedBy: new string('a', 251)
+                ),
+                // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate.AddDays(-1),
+                    updatedBy: new string('a', 251)
+                ),
+                // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
+                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate,
+                    updatedBy: new string('a', 251)
+                ),
+            };
+            var validationResultCollection = new ValidationResult[customerCollection.Length];
 
-        //    // Assert
-        //    foreach (var validationResult in validationResultCollection)
-        //    {
-        //        validationResult.Should().NotBeNull();
-        //        validationResult.Errors.FirstOrDefault(
-        //            q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
-        //        ).Should().NotBeNull();
-        //    }
-        //}
+            // Act
+            for (int i = 0; i < customerCollection.Length; i++)
+                validationResultCollection[i] = customerValidator.Validate(customerCollection[i]);
+
+            // Assert
+            foreach (var validationResult in validationResultCollection)
+            {
+                validationResult.Should().NotBeNull();
+                validationResult.Errors.FirstOrDefault(
+                    q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
+                ).Should().NotBeNull();
+            }
+        }
 
         [Fact]
         public void AddRegistryVersionIsRequiredSpecification_Should_Pass()
