@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MCB.Core.Domain.DomainEntities.Specifications;
 using MCB.Core.Domain.Entities;
+using MCB.Core.Domain.Tests.Fixtures;
 using MCB.Core.Infra.CrossCutting.Time;
 using System;
 using System.Linq;
@@ -10,8 +11,14 @@ using Xunit;
 
 namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
 {
+    [Collection(nameof(DefaultFixture))]
     public class DomainEntitySpecificationsBaseTest
     {
+        public DomainEntitySpecificationsBaseTest(DefaultFixture defaultFixture)
+        {
+
+        }
+
         [Fact]
         public void AddIdIsRequiredSpecification_Should_Pass()
         {
