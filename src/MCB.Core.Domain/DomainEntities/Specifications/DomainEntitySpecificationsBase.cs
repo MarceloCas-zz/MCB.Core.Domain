@@ -60,6 +60,12 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
             return registryVersion > default(DateTimeOffset);
         }
 
+        // Protected Methods
+        protected virtual DateTimeOffset GetUtcNow()
+        {
+            return DateTimeOffset.UtcNow;
+        }
+
         // Public Methods
         public void AddIdIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
@@ -116,16 +122,15 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                  */
                 .Must(domainEntity =>
                     domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                    && domainEntity.AuditableInfo.UpdatedAt <= GetUtcNow()
                     && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
                 )
-                .When(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
+                .When(domainEntity => DomainEntitySpecificationsBase<TDomainEntity>.CheckUpdateInfoIsRequired(domainEntity))
                 .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
                 .WithErrorCode(UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE)
                 .WithMessage(UPDATE_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
-        
         public void AddRegistryVersionIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity.RegistryVersion)

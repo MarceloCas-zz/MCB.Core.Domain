@@ -191,53 +191,29 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         public void AddUpdateInfoIsValidSpecification_Should_Pass()
         {
             // Arrange
-            var referenceDate = DateTimeOffset.UtcNow;
             var customerValidator = new CustomerValidator();
+            var referenceDate = customerValidator.CustomerSpecifications.UtcNow;
 
             var customerCollection = new Customer[] {
-                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
-                // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
-                    createdAt: DateTimeOffset.UtcNow.AddDays(-1),
-                    updatedAt: DateTimeOffset.UtcNow,
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate,
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
-                // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
-                // && domainEntity.AuditableInfo.UpdatedBy.Length = 250
                 new Customer().SetExistingInfoExposed(
-                    createdAt: DateTimeOffset.UtcNow.AddDays(-1),
-                    updatedAt: DateTimeOffset.UtcNow,
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate,
                     updatedBy: new string('a', 250)
                 ),
-                // domainEntity.AuditableInfo.UpdatedAt = domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
-                // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
                     updatedAt: referenceDate,
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
-                // domainEntity.AuditableInfo.UpdatedAt = domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
-                // && domainEntity.AuditableInfo.UpdatedBy.Length = 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
                     updatedAt: referenceDate,
                     updatedBy: new string('a', 250)
-                ),
-                // When CheckUpdateInfoIsRequired failed
-                new Customer().SetExistingInfoExposed(
-                    createdAt: referenceDate.AddDays(-1),
-                    updatedAt: default,
-                    updatedBy: string.Empty
-                ),
-                // When CheckUpdateInfoIsRequired failed
-                new Customer().SetExistingInfoExposed(
-                    createdAt: referenceDate.AddDays(-1),
-                    updatedAt: referenceDate,
-                    updatedBy: string.Empty
                 )
             };
             var validationResultCollection = new ValidationResult[customerCollection.Length];
@@ -259,13 +235,13 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         public void AddUpdateInfoIsValidSpecification_Should_Not_Pass()
         {
             // Arrange
-            var referenceDate = DateTimeOffset.UtcNow;
             var customerValidator = new CustomerValidator();
+            var referenceDate = customerValidator.CustomerSpecifications.UtcNow;
 
             var customerCollection = new Customer[] {
                 new Customer().SetExistingInfoExposed(
-                    createdAt: DateTimeOffset.UtcNow,
-                    updatedAt: DateTimeOffset.UtcNow.AddDays(-1),
+                    createdAt: referenceDate,
+                    updatedAt: referenceDate.AddDays(-1),
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 new Customer().SetExistingInfoExposed(
@@ -437,24 +413,36 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
     public class CustomerSpecifications
         : DomainEntitySpecificationsBase<Customer>
     {
+        public DateTimeOffset UtcNow { get; }
 
+        public CustomerSpecifications()
+        {
+            UtcNow = DateTimeOffset.UtcNow;
+        }
+
+        protected override DateTimeOffset GetUtcNow()
+        {
+            return UtcNow;
+        }
     }
     public class CustomerValidator
         : AbstractValidator<Customer>
     {
+        public CustomerSpecifications CustomerSpecifications { get; }
+
         public CustomerValidator()
         {
-            var customerSpecifications = new CustomerSpecifications();
+            CustomerSpecifications = new CustomerSpecifications();
 
-            customerSpecifications.AddIdIsRequiredSpecification(this);
-            customerSpecifications.AddTenantIdIsRequiredSpecification(this);
-            customerSpecifications.AddCreationInfoIsRequiredSpecification(this);
+            CustomerSpecifications.AddIdIsRequiredSpecification(this);
+            CustomerSpecifications.AddTenantIdIsRequiredSpecification(this);
+            CustomerSpecifications.AddCreationInfoIsRequiredSpecification(this);
 
-            customerSpecifications.AddCreationInfoIsValidSpecification(this);
-            customerSpecifications.AddUpdateInfoIsRequiredSpecification(this);
-            customerSpecifications.AddUpdateInfoIsValidSpecification(this);
-            customerSpecifications.AddRegistryVersionIsRequiredSpecification(this);
-            customerSpecifications.AddRegistryVersionIsValidSpecification(this);
+            CustomerSpecifications.AddCreationInfoIsValidSpecification(this);
+            CustomerSpecifications.AddUpdateInfoIsRequiredSpecification(this);
+            CustomerSpecifications.AddUpdateInfoIsValidSpecification(this);
+            CustomerSpecifications.AddRegistryVersionIsRequiredSpecification(this);
+            CustomerSpecifications.AddRegistryVersionIsValidSpecification(this);
         }
     }
 }
