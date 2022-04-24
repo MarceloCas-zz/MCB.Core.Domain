@@ -28,7 +28,7 @@ namespace MCB.Core.Domain.Tests.DomainServicesTests
         }
 
         [Fact]
-        public async Task DomainServiceBase_Should_Raise_DomainNotificationEvent_And_DomainEvents()
+        public async Task DomainServiceBase_Should_Raise_DomainEvents()
         {
             // Arrange
             var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
@@ -70,6 +70,42 @@ namespace MCB.Core.Domain.Tests.DomainServicesTests
             receivedDomainEventsCollection[0].ExecutionUser.Should().Be(executionUser);
             receivedDomainEventsCollection[0].SourcePlatform.Should().Be(sourcePlatform);
         }
+
+        [Fact]
+        public async Task DomainServiceBase_Should_Not_Raise_DomainEvents_With_Null_EventData()
+        {
+            // Arrange
+            var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
+            var customerDomainService = scopedServiceProvider.GetService<ICustomerDomainService>();
+            var tenantId = Guid.NewGuid();
+            var correlationId = Guid.NewGuid();
+            var executionUser = "marcelo.castelo@outlook.com";
+            var sourcePlatform = "unitTest";
+            var expectedExceptionMessage = "Value cannot be null. (Parameter 'eventData')";
+            var exceptionMessage = string.Empty;
+
+            // Act
+            try
+            {
+                await customerDomainService.RaiseDomainEventAsyncExposed<NewCustomerRegisteredEvent>(
+                        tenantId,
+                        correlationId,
+                        executionUser,
+                        sourcePlatform,
+                        eventData: null,
+                        cancellationToken: default
+                    );
+            }
+            catch (ArgumentNullException ex)
+            {
+                exceptionMessage = ex.Message;
+            }
+
+            // Assert
+            exceptionMessage.Should().Be(expectedExceptionMessage);
+        }
+
+
     }
 
     public class Customer
