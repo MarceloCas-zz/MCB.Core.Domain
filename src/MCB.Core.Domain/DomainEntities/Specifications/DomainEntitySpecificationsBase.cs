@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MCB.Core.Domain.Abstractions.DomainEntities.Specifications;
 using MCB.Core.Domain.Entities;
+using MCB.Core.Infra.CrossCutting.Time;
 
 namespace MCB.Core.Domain.DomainEntities.Specifications
 {
@@ -60,12 +61,6 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
             return registryVersion > default(DateTimeOffset);
         }
 
-        // Protected Methods
-        protected virtual DateTimeOffset GetUtcNow()
-        {
-            return DateTimeOffset.UtcNow;
-        }
-
         // Public Methods
         public void AddIdIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
@@ -96,7 +91,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         {
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
-                    domainEntity.AuditableInfo.CreatedAt <= DateTimeOffset.UtcNow
+                    domainEntity.AuditableInfo.CreatedAt <= TimeProvider.GetUtcNow()
                     && domainEntity.AuditableInfo.CreatedBy.Length <= 250
                 )
                 .When(domainEntity => CheckCreationInfoIsRequired(domainEntity))
@@ -118,11 +113,11 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             validator.RuleFor(domainEntity => domainEntity)
                 /*
-                 * Sonar never take 100% because the condition updatedAt == DateTimeOffset.UtcNow is impossible
+                 * Sonar never take 100% because the condition updatedAt == TimeProvider.GetUtcNow() is impossible
                  */
                 .Must(domainEntity =>
                     domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    && domainEntity.AuditableInfo.UpdatedAt <= GetUtcNow()
+                    && domainEntity.AuditableInfo.UpdatedAt <= TimeProvider.GetUtcNow()
                     && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
                 )
                 .When(domainEntity => DomainEntitySpecificationsBase<TDomainEntity>.CheckUpdateInfoIsRequired(domainEntity))
@@ -143,7 +138,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         {
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
-                    domainEntity.RegistryVersion <= DateTimeOffset.UtcNow
+                    domainEntity.RegistryVersion <= TimeProvider.GetUtcNow()
                     && domainEntity.RegistryVersion >= (domainEntity.AuditableInfo.UpdatedAt ?? default)
                 )
                 .When(domainEntity => CheckRegistryVersionIsRequired(domainEntity.RegistryVersion))

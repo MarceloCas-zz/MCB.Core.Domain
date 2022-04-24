@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using MCB.Core.Domain.Abstractions.DomainNotifications;
 using MCB.Core.Domain.Abstractions.DomainNotifications.Enums;
 using MCB.Core.Domain.Abstractions.DomainNotifications.Models;
 using MCB.Core.Domain.DomainNotifications;
@@ -9,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;

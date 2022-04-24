@@ -3,6 +3,7 @@ using MCB.Core.Domain.Abstractions.DomainEntities.Specifications;
 using MCB.Core.Domain.DomainEntities.Specifications;
 using MCB.Core.Domain.DomainEntities.Validators;
 using MCB.Core.Domain.Entities;
+using MCB.Core.Infra.CrossCutting.Time;
 using System;
 using Xunit;
 
@@ -18,9 +19,9 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
                 id: Guid.NewGuid(),
                 tenantId: Guid.NewGuid(),
                 createdBy: "marcelo.castelo@outlook.com",
-                createdAt: DateTimeOffset.UtcNow,
+                createdAt: TimeProvider.GetUtcNow(),
                 sourcePlatform: "unitTest",
-                registryVersion: DateTimeOffset.UtcNow
+                registryVersion: TimeProvider.GetUtcNow()
             );
             var customerValidatorisValidToCreate = new CustomerValidatorisValidToCreate(new CustomerSpecifications());
 
@@ -38,11 +39,11 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
                 id: Guid.NewGuid(),
                 tenantId: Guid.NewGuid(),
                 createdBy: "marcelo.castelo@outlook.com",
-                createdAt: DateTimeOffset.UtcNow,
+                createdAt: TimeProvider.GetUtcNow(),
                 updatedBy: "marcelo.castelo@outlook.com",
-                updatedAt: DateTimeOffset.UtcNow,
+                updatedAt: TimeProvider.GetUtcNow(),
                 sourcePlatform: "unitTest",
-                registryVersion: DateTimeOffset.UtcNow
+                registryVersion: TimeProvider.GetUtcNow()
             );
             var customerValidatorisValidToCreate = new CustomerValidatorisValidToUpdate(new CustomerSpecifications());
 

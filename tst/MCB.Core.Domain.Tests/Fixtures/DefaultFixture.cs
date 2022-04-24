@@ -1,4 +1,5 @@
 ﻿using MCB.Core.Domain.Tests.DomainServicesTests;
+using MCB.Core.Infra.CrossCutting.Time;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Xunit;
@@ -19,6 +20,8 @@ namespace MCB.Core.Domain.Tests.Fixtures
         // Constructors
         public DefaultFixture()
         {
+            TimeProvider.InjectedUtcNow = DateTimeOffset.UtcNow;
+
             var services = new ServiceCollection();
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
