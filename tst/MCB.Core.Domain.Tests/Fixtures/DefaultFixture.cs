@@ -16,11 +16,12 @@ namespace MCB.Core.Domain.Tests.Fixtures
     {
         // Properties
         public IServiceProvider ServiceProvider { get; }
+        public DateTimeOffset InjectedUtcNow = new DateTimeOffset(DateTime.SpecifyKind(new DateTime(2022, 1, 1), DateTimeKind.Utc));
 
         // Constructors
         public DefaultFixture()
         {
-            TimeProvider.InjectedUtcNow = new DateTimeOffset(DateTime.SpecifyKind(new DateTime(2022, 1, 1), DateTimeKind.Utc));
+            TimeProvider.InjectedUtcNow = InjectedUtcNow;
 
             var services = new ServiceCollection();
             ConfigureServices(services);

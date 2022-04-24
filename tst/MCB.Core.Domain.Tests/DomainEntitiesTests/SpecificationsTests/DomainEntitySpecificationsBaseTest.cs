@@ -14,9 +14,11 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
     [Collection(nameof(DefaultFixture))]
     public class DomainEntitySpecificationsBaseTest
     {
+        private readonly DefaultFixture _defaultFixture;
+
         public DomainEntitySpecificationsBaseTest(DefaultFixture defaultFixture)
         {
-            // Fixture should be receive to set TimeProvider in constructor to test UtcNow
+            _defaultFixture = defaultFixture;
         }
 
         [Fact]
@@ -288,6 +290,8 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
                 ).Should().BeNull();
             }
+
+            TimeProvider.InjectedUtcNow.Should().Be(_defaultFixture.InjectedUtcNow);
         }
         [Fact]
         public void AddUpdateInfoIsValidSpecification_Should_Not_Pass()
@@ -370,6 +374,8 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
                 ).Should().NotBeNull();
             }
+
+            TimeProvider.InjectedUtcNow.Should().Be(_defaultFixture.InjectedUtcNow);
         }
 
         [Fact]
