@@ -111,53 +111,14 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             validator.RuleFor(domainEntity => domainEntity)
-                .Must(domainEntity => {
-
-                    if(domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow)
-                    {
-                        if (domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt)
-                        {
-                            if(domainEntity.AuditableInfo.UpdatedBy.Length < 250)
-                            {
-                                return true;
-                            }
-                            else if(domainEntity.AuditableInfo.UpdatedBy.Length == 250)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }    
-                        }
-                        else if(domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt)
-                        {
-                            if (domainEntity.AuditableInfo.UpdatedBy.Length < 250)
-                            {
-                                return true;
-                            }
-                            else if (domainEntity.AuditableInfo.UpdatedBy.Length == 250)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    //domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    //    && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
-                    //    && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
-                })
+                /*
+                 * Sonar never take 100% because the condition updatedAt == DateTimeOffset.UtcNow is impossible
+                 */
+                .Must(domainEntity =>
+                    domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
+                    && domainEntity.AuditableInfo.UpdatedAt < DateTimeOffset.UtcNow
+                    && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
+                )
                 .When(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
                 .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
                 .WithErrorCode(UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE)
