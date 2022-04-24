@@ -264,6 +264,11 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     createdAt: referenceDate.AddDays(-1),
                     updatedAt: referenceDate.AddDays(-1),
                     updatedBy: new string('a', 251)
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-2),
+                    updatedAt: referenceDate.AddDays(-1),
+                    updatedBy: new string('a', 251)
                 )
             };
             var validationResultCollection = new ValidationResult[customerCollection.Length];
