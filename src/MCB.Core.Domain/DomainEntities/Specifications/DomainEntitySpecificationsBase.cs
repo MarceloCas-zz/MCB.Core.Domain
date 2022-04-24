@@ -123,6 +123,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
                 .WithMessage(UPDATE_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
+        
         public void AddRegistryVersionIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
         {
             validator.RuleFor(domainEntity => domainEntity.RegistryVersion)
