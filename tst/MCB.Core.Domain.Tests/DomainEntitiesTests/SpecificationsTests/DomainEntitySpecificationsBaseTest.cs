@@ -16,7 +16,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
     {
         public DomainEntitySpecificationsBaseTest(DefaultFixture defaultFixture)
         {
-
+            // Fixture should be receive to set TimeProvider in constructor to test UtcNow
         }
 
         [Fact]
