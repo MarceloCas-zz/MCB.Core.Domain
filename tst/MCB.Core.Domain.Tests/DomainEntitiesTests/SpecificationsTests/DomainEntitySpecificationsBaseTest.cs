@@ -207,6 +207,16 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 250)
                 ),
                 new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate.AddSeconds(-1),
+                    updatedBy: "marcelo.castelo@outlook.com"
+                ),
+                new Customer().SetExistingInfoExposed(
+                    createdAt: referenceDate.AddDays(-1),
+                    updatedAt: referenceDate.AddSeconds(-1),
+                    updatedBy: new string('a', 250)
+                ),
+                new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
                     updatedAt: referenceDate,
                     updatedBy: "marcelo.castelo@outlook.com"
