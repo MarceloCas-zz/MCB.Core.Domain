@@ -3,7 +3,7 @@ using MCB.Core.Domain.Abstractions.DomainEntities.Specifications;
 using MCB.Core.Domain.DomainEntities.Specifications;
 using MCB.Core.Domain.DomainEntities.Validators;
 using MCB.Core.Domain.Entities;
-using MCB.Core.Infra.CrossCutting.Time;
+using MCB.Core.Infra.CrossCutting.DateTime;
 using System;
 using Xunit;
 
@@ -19,9 +19,9 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
                 id: Guid.NewGuid(),
                 tenantId: Guid.NewGuid(),
                 createdBy: "marcelo.castelo@outlook.com",
-                createdAt: TimeProvider.GetUtcNow(),
+                createdAt: DateTimeProvider.GetDate(),
                 sourcePlatform: "unitTest",
-                registryVersion: TimeProvider.GetUtcNow()
+                registryVersion: DateTimeProvider.GetDate()
             );
             var customerValidatorisValidToCreate = new CustomerValidatorisValidToCreate(new CustomerSpecifications());
 
@@ -39,11 +39,11 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
                 id: Guid.NewGuid(),
                 tenantId: Guid.NewGuid(),
                 createdBy: "marcelo.castelo@outlook.com",
-                createdAt: TimeProvider.GetUtcNow(),
+                createdAt: DateTimeProvider.GetDate(),
                 updatedBy: "marcelo.castelo@outlook.com",
-                updatedAt: TimeProvider.GetUtcNow(),
+                updatedAt: DateTimeProvider.GetDate(),
                 sourcePlatform: "unitTest",
-                registryVersion: TimeProvider.GetUtcNow()
+                registryVersion: DateTimeProvider.GetDate()
             );
             var customerValidatorisValidToCreate = new CustomerValidatorisValidToUpdate(new CustomerSpecifications());
 
@@ -69,7 +69,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
             DateTimeOffset registryVersion = default
         )
         {
-            SetExistingInfo(
+            SetExistingInfoInternal<Customer>(
                 id,
                 tenantId,
                 createdBy,
@@ -81,6 +81,11 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
             );
 
             return this;
+        }
+
+        protected override DomainEntityBase CreateInstanceForCloneInternal()
+        {
+            return new Customer();
         }
     }
     public class CustomerSpecifications

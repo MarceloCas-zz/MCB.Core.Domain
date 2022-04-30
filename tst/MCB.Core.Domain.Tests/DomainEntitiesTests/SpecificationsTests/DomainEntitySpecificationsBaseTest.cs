@@ -4,7 +4,7 @@ using FluentValidation.Results;
 using MCB.Core.Domain.DomainEntities.Specifications;
 using MCB.Core.Domain.Entities;
 using MCB.Core.Domain.Tests.Fixtures;
-using MCB.Core.Infra.CrossCutting.Time;
+using MCB.Core.Infra.CrossCutting.DateTime;
 using System;
 using System.Linq;
 using Xunit;
@@ -99,7 +99,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             // Arrange
             var customer = new Customer();
             customer.SetExistingInfoExposed(
-                createdAt: TimeProvider.GetUtcNow(),
+                createdAt: DateTimeProvider.GetDate(),
                 createdBy: "marcelo.castelo@outlook.com"
             );
             var customerValidator = new CustomerValidator();
@@ -119,7 +119,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             // Arrange
             var customerA = new Customer();
             customerA.SetExistingInfoExposed(
-                createdAt: TimeProvider.GetUtcNow(),
+                createdAt: DateTimeProvider.GetDate(),
                 createdBy: null
             );
             var customerB = new Customer();
@@ -151,7 +151,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             // Arrange
             var customer = new Customer();
             customer.SetExistingInfoExposed(
-                createdAt: TimeProvider.GetUtcNow(),
+                createdAt: DateTimeProvider.GetDate(),
                 createdBy: "marcelo.castelo@outlook.com"
             );
             var customerValidator = new CustomerValidator();
@@ -171,12 +171,12 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             // Arrange
             var customerA = new Customer();
             customerA.SetExistingInfoExposed(
-                createdAt: TimeProvider.GetUtcNow().AddDays(1),
+                createdAt: DateTimeProvider.GetDate().AddDays(1),
                 createdBy: "marcelo.castelo@outlook.com"
             );
             var customerB = new Customer();
             customerB.SetExistingInfoExposed(
-                createdAt: TimeProvider.GetUtcNow(),
+                createdAt: DateTimeProvider.GetDate(),
                 createdBy: new string('a', 251)
             );
             var customerValidator = new CustomerValidator();
@@ -202,17 +202,17 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         {
             // Arrange
             var customerValidator = new CustomerValidator();
-            var referenceDate = TimeProvider.GetUtcNow();
+            var referenceDate = DateTimeProvider.GetDate();
 
             /*
             domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-            && domainEntity.AuditableInfo.UpdatedAt <= TimeProvider.GetUtcNow()
+            && domainEntity.AuditableInfo.UpdatedAt <= DateTimeProvider.GetDate()
             && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
              */
 
             var customerCollection = new Customer[] {
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-2),
@@ -220,7 +220,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length == 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-2),
@@ -228,7 +228,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 250)
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt == DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-2),
@@ -236,7 +236,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt == DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length == 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-2),
@@ -244,7 +244,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 250)
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-1),
@@ -252,7 +252,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length == 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-1),
@@ -260,7 +260,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 250)
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt == DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length < 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
@@ -268,7 +268,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt == DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length == 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
@@ -290,19 +290,17 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
                 ).Should().BeNull();
             }
-
-            TimeProvider.InjectedUtcNow.Should().Be(_defaultFixture.InjectedUtcNow);
         }
         [Fact]
         public void AddUpdateInfoIsValidSpecification_Should_Not_Pass()
         {
             // Arrange
             var customerValidator = new CustomerValidator();
-            var referenceDate = TimeProvider.GetUtcNow();
+            var referenceDate = DateTimeProvider.GetDate();
 
             /*
             domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-            && domainEntity.AuditableInfo.UpdatedAt <= TimeProvider.GetUtcNow()
+            && domainEntity.AuditableInfo.UpdatedAt <= DateTimeProvider.GetDate()
             && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
              */
 
@@ -314,21 +312,21 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt > TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt > DateTimeProvider.GetDate()
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
                     updatedAt: referenceDate.AddDays(1),
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt > TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt > DateTimeProvider.GetDate()
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(1),
                     updatedAt: referenceDate.AddDays(1),
                     updatedBy: "marcelo.castelo@outlook.com"
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-2),
@@ -336,7 +334,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 251)
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt > domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt == DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-1),
@@ -344,7 +342,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 251)
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt < TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt < DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate.AddDays(-1),
@@ -352,7 +350,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     updatedBy: new string('a', 251)
                 ),
                 // domainEntity.AuditableInfo.UpdatedAt == domainEntity.AuditableInfo.CreatedAt
-                // && domainEntity.AuditableInfo.UpdatedAt == TimeProvider.GetUtcNow()
+                // && domainEntity.AuditableInfo.UpdatedAt == DateTimeProvider.GetDate()
                 // && domainEntity.AuditableInfo.UpdatedBy.Length > 250
                 new Customer().SetExistingInfoExposed(
                     createdAt: referenceDate,
@@ -374,8 +372,6 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
                     q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
                 ).Should().NotBeNull();
             }
-
-            TimeProvider.InjectedUtcNow.Should().Be(_defaultFixture.InjectedUtcNow);
         }
 
         [Fact]
@@ -383,7 +379,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
         {
             // Arrange
             var customer = new Customer();
-            customer.SetExistingInfoExposed(registryVersion: TimeProvider.GetUtcNow());
+            customer.SetExistingInfoExposed(registryVersion: DateTimeProvider.GetDate());
             var customerValidator = new CustomerValidator();
 
             // Act
@@ -423,13 +419,13 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             var customerValidator = new CustomerValidator();
             var customerA = new Customer();
             customerA.SetExistingInfoExposed(
-                updatedAt: TimeProvider.GetUtcNow().AddDays(-2),
-                registryVersion: TimeProvider.GetUtcNow().AddDays(-1)
+                updatedAt: DateTimeProvider.GetDate().AddDays(-2),
+                registryVersion: DateTimeProvider.GetDate().AddDays(-1)
             );
             var customerB = new Customer();
             customerB.SetExistingInfoExposed(
                 updatedAt: null,
-                registryVersion: TimeProvider.GetUtcNow().AddDays(-1)
+                registryVersion: DateTimeProvider.GetDate().AddDays(-1)
             );
 
             // Act
@@ -448,13 +444,13 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             // Arrange
             var customerA = new Customer();
             customerA.SetExistingInfoExposed(
-                updatedAt: TimeProvider.GetUtcNow().AddDays(-1),
-                registryVersion: TimeProvider.GetUtcNow().AddDays(-2)
+                updatedAt: DateTimeProvider.GetDate().AddDays(-1),
+                registryVersion: DateTimeProvider.GetDate().AddDays(-2)
             );
 
             var customerB = new Customer();
             customerB.SetExistingInfoExposed(
-                registryVersion: TimeProvider.GetUtcNow().AddDays(1)
+                registryVersion: DateTimeProvider.GetDate().AddDays(1)
             );
 
             var customerValidator = new CustomerValidator();
@@ -493,7 +489,7 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             DateTimeOffset registryVersion = default
         )
         {
-            SetExistingInfo(
+            SetExistingInfoInternal<Customer>(
                 id,
                 tenantId,
                 createdBy ?? string.Empty,
@@ -505,6 +501,11 @@ namespace MCB.Core.Domain.Tests.DomainEntitiesTests.SpecificationsTests
             );
 
             return this;
+        }
+
+        protected override DomainEntityBase CreateInstanceForCloneInternal()
+        {
+            return new Customer();
         }
     }
     public class CustomerSpecifications

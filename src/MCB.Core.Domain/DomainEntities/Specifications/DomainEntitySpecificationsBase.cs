@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MCB.Core.Domain.Abstractions.DomainEntities.Specifications;
 using MCB.Core.Domain.Entities;
-using MCB.Core.Infra.CrossCutting.Time;
+using MCB.Core.Infra.CrossCutting.DateTime;
 
 namespace MCB.Core.Domain.DomainEntities.Specifications
 {
@@ -91,7 +91,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         {
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
-                    domainEntity.AuditableInfo.CreatedAt <= TimeProvider.GetUtcNow()
+                    domainEntity.AuditableInfo.CreatedAt <= DateTimeProvider.GetDate()
                     && domainEntity.AuditableInfo.CreatedBy.Length <= 250
                 )
                 .When(domainEntity => CheckCreationInfoIsRequired(domainEntity))
@@ -114,7 +114,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity => 
                     domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    && domainEntity.AuditableInfo.UpdatedAt <= TimeProvider.GetUtcNow()
+                    && domainEntity.AuditableInfo.UpdatedAt <= DateTimeProvider.GetDate()
                     && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
                 )
                 .When(domainEntity => DomainEntitySpecificationsBase<TDomainEntity>.CheckUpdateInfoIsRequired(domainEntity))
@@ -136,7 +136,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         {
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
-                    domainEntity.RegistryVersion <= TimeProvider.GetUtcNow()
+                    domainEntity.RegistryVersion <= DateTimeProvider.GetDate()
                     && domainEntity.RegistryVersion >= (domainEntity.AuditableInfo.UpdatedAt ?? default)
                 )
                 .When(domainEntity => CheckRegistryVersionIsRequired(domainEntity.RegistryVersion))

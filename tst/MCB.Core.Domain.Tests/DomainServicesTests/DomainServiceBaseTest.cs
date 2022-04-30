@@ -121,11 +121,16 @@ namespace MCB.Core.Domain.Tests.DomainServicesTests
             string sourcePlatform
         )
         {
-            return (Customer)base.RegisterNew(
+            return RegisterNewInternal<Customer>(
                 tenantId,
                 executionUser,
                 sourcePlatform
             );
+        }
+
+        protected override DomainEntityBase CreateInstanceForCloneInternal()
+        {
+            return new Customer();
         }
     }
     public class NewCustomerRegisteredEvent
