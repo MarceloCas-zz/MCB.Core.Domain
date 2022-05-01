@@ -53,8 +53,8 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
         }
         private static bool CheckUpdateInfoIsRequired(TDomainEntity domainEntity)
         {
-            return domainEntity.AuditableInfo.UpdatedAt > default(DateTimeOffset)
-                && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.UpdatedBy);
+            return domainEntity.AuditableInfo.LastUpdatedAt > default(DateTimeOffset)
+                && !string.IsNullOrWhiteSpace(domainEntity.AuditableInfo.LastUpdatedBy);
         }
         private static bool CheckRegistryVersionIsRequired(DateTimeOffset registryVersion)
         {
@@ -113,9 +113,9 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity => 
-                    domainEntity.AuditableInfo.UpdatedAt >= domainEntity.AuditableInfo.CreatedAt
-                    && domainEntity.AuditableInfo.UpdatedAt <= DateTimeProvider.GetDate()
-                    && domainEntity.AuditableInfo.UpdatedBy.Length <= 250
+                    domainEntity.AuditableInfo.LastUpdatedAt >= domainEntity.AuditableInfo.CreatedAt
+                    && domainEntity.AuditableInfo.LastUpdatedAt <= DateTimeProvider.GetDate()
+                    && domainEntity.AuditableInfo.LastUpdatedBy.Length <= 250
                 )
                 .When(domainEntity => DomainEntitySpecificationsBase<TDomainEntity>.CheckUpdateInfoIsRequired(domainEntity))
                 .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
@@ -137,7 +137,7 @@ namespace MCB.Core.Domain.DomainEntities.Specifications
             validator.RuleFor(domainEntity => domainEntity)
                 .Must(domainEntity =>
                     domainEntity.RegistryVersion <= DateTimeProvider.GetDate()
-                    && domainEntity.RegistryVersion >= (domainEntity.AuditableInfo.UpdatedAt ?? default)
+                    && domainEntity.RegistryVersion >= (domainEntity.AuditableInfo.LastUpdatedAt ?? default)
                 )
                 .When(domainEntity => CheckRegistryVersionIsRequired(domainEntity.RegistryVersion))
                 .WithSeverity(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_SEVERITY)
