@@ -7,39 +7,40 @@ namespace MCB.Core.Domain.DomainEntities.Specifications;
 
 public abstract class DomainEntitySpecificationsBase
 {
-    // Constants
-    public const Severity ID_IS_REQUIRED_ERROR_SEVERITY = Severity.Error;
-    public const string ID_IS_REQUIRED_ERROR_CODE = "DOMAIN_ENTITY_ID_IS_REQUIRED";
-    public const string ID_IS_REQUIRED_ERROR_MESSAGE = "DomainEntity.Id is required";
+    // Static Fields
+    public static readonly Severity idIsRequiredErrorSeverity = Severity.Error;
+    public static readonly string idIsRequiredErrorCode = "DOMAIN_ENTITY_ID_IS_REQUIRED";
+    public static readonly string idIsRequiredErrorMessage = "DomainEntity.Id is required";
 
-    public const Severity TENANT_ID_IS_REQUIRED_ERROR_SEVERITY = Severity.Error;
-    public const string TENANT_ID_IS_REQUIRED_ERROR_CODE = "DOMAIN_ENTITY_TENANT_ID_IS_REQUIRED";
-    public const string TENANT_ID_IS_REQUIRED_ERROR_MESSAGE = "DomainEntity.TenantId is required";
+    public static readonly Severity tenantIdIsRequiredErrorSeverity = Severity.Error;
+    public static readonly string tenantIdIsRequiredErrorCode = "DOMAIN_ENTITY_TENANT_ID_IS_REQUIRED";
+    public static readonly string tenantIdIsRequiredErrorMessage = "DomainEntity.TenantId is required";
 
-    public const Severity CREATION_INFO_IS_REQUIRED_ERROR_SEVERITY = Severity.Error;
-    public const string CREATION_INFO_IS_REQUIRED_ERROR_CODE = "DOMAIN_ENTITY_CREATION_INFO_IS_REQUIRED";
-    public const string CREATION_INFO_IS_REQUIRED_ERROR_MESSAGE = "DomainEntity creation info is required";
+    public static readonly Severity creationInfoIsRequiredErrorSeverity = Severity.Error;
+    public static readonly string creationInfoIsRequiredErrorCode = "DOMAIN_ENTITY_CREATION_INFO_IS_REQUIRED";
+    public static readonly string creationInfoIsRequiredErrorMessage = "DomainEntity creation info is required";
 
-    public const Severity CREATION_INFO_SHOULD_BE_VALID_ERROR_SEVERITY = Severity.Error;
-    public const string CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE = "DOMAIN_ENTITY_CREATION_INFO_SHOULD_BE_VALID";
-    public const string CREATION_INFO_SHOULD_BE_VALID_ERROR_MESSAGE = "DomainEntity creation info should be valid";
+    public static readonly Severity creationInfoShouldBeValidErrorSeverity = Severity.Error;
+    public static readonly string creationInfoShouldBeValidErrorCode = "DOMAIN_ENTITY_CREATION_INFO_SHOULD_BE_VALID";
+    public static readonly string creationInfoShouldBeValidErrorMessage = "DomainEntity creation info should be valid";
 
-    public const Severity UPDATE_INFO_IS_REQUIRED_ERROR_SEVERITY = Severity.Error;
-    public const string UPDATE_INFO_IS_REQUIRED_ERROR_CODE = "DOMAIN_ENTITY_UPDATE_INFO_IS_REQUIRED";
-    public const string UPDATE_INFO_IS_REQUIRED_ERROR_MESSAGE = "DomainEntity update info is required";
+    public static readonly Severity updateInfoIsRequiredErrorSeverity = Severity.Error;
+    public static readonly string updateInfoIsRequiredErrorCode = "DOMAIN_ENTITY_UPDATE_INFO_IS_REQUIRED";
+    public static readonly string updateInfoIsRequiredErrorMessage = "DomainEntity update info is required";
 
-    public const Severity UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY = Severity.Error;
-    public const string UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE = "DOMAIN_ENTITY_UPDATE_INFO_SHOULD_BE_VALID";
-    public const string UPDATE_INFO_SHOULD_BE_VALID_ERROR_MESSAGE = "DomainEntity update info should be valid";
+    public static readonly Severity updateInfoShouldBeValidErrorSeverity = Severity.Error;
+    public static readonly string updateInfoShouldBeValidErrorCode = "DOMAIN_ENTITY_UPDATE_INFO_SHOULD_BE_VALID";
+    public static readonly string updateInfoShouldBeValidErrorMessage = "DomainEntity update info should be valid";
 
-    public const Severity REGISTRY_VERSION_IS_REQUIRED_ERROR_SEVERITY = Severity.Error;
-    public const string REGISTRY_VERSION_IS_REQUIRED_ERROR_CODE = "DOMAIN_ENTITY_REGISTRY_VERSION_IS_REQUIRED";
-    public const string REGISTRY_VERSION_IS_REQUIRED_ERROR_MESSAGE = "DomainEntity.RegistryVersion is required";
+    public static readonly Severity registryVersionIsRequiredErrorSeverity = Severity.Error;
+    public static readonly string registryVersionIsRequiredErrorCode = "DOMAIN_ENTITY_REGISTRY_VERSION_IS_REQUIRED";
+    public static readonly string registryVersionIsRequiredErrorMessage = "DomainEntity.RegistryVersion is required";
 
-    public const Severity REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_SEVERITY = Severity.Error;
-    public const string REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE = "DOMAIN_ENTITY_REGISTRY_VERSION_SHOULD_BE_VALID";
-    public const string REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_MESSAGE = "DomainEntity.RegistryVersion should be valid";
+    public static readonly Severity registryVersionShouldBeValidErrorSeverity = Severity.Error;
+    public static readonly string registryVersionShouldBeValidErrorCode = "DOMAIN_ENTITY_REGISTRY_VERSION_SHOULD_BE_VALID";
+    public static readonly string registryVersionShouldBeValidErrorMessage = "DomainEntity.RegistryVersion should be valid";
 }
+
 public abstract class DomainEntitySpecificationsBase<TDomainEntity>
     : DomainEntitySpecificationsBase,
     IDomainEntitySpecifications<TDomainEntity>
@@ -66,26 +67,25 @@ public abstract class DomainEntitySpecificationsBase<TDomainEntity>
     {
         validator.RuleFor(domainEntity => domainEntity.Id)
             .NotEqual(Guid.Empty)
-            .WithSeverity(ID_IS_REQUIRED_ERROR_SEVERITY)
-            .WithErrorCode(ID_IS_REQUIRED_ERROR_CODE)
-            .WithMessage(ID_IS_REQUIRED_ERROR_MESSAGE);
+            .WithSeverity(idIsRequiredErrorSeverity)
+            .WithErrorCode(idIsRequiredErrorCode)
+            .WithMessage(idIsRequiredErrorMessage);
     }
     public void AddTenantIdIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
     {
         validator.RuleFor(domainEntity => domainEntity.TenantId)
             .NotEqual(Guid.Empty)
-            .WithSeverity(TENANT_ID_IS_REQUIRED_ERROR_SEVERITY)
-            .WithErrorCode(TENANT_ID_IS_REQUIRED_ERROR_CODE)
-            .WithMessage(TENANT_ID_IS_REQUIRED_ERROR_MESSAGE);
+            .WithSeverity(tenantIdIsRequiredErrorSeverity)
+            .WithErrorCode(tenantIdIsRequiredErrorCode)
+            .WithMessage(tenantIdIsRequiredErrorMessage);
     }
-    
     public void AddCreationInfoIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
     {
         validator.RuleFor(domainEntity => domainEntity)
             .Must(domainEntity => CheckCreationInfoIsRequired(domainEntity))
-            .WithSeverity(CREATION_INFO_IS_REQUIRED_ERROR_SEVERITY)
-            .WithErrorCode(CREATION_INFO_IS_REQUIRED_ERROR_CODE)
-            .WithMessage(CREATION_INFO_IS_REQUIRED_ERROR_MESSAGE);
+            .WithSeverity(creationInfoIsRequiredErrorSeverity)
+            .WithErrorCode(creationInfoIsRequiredErrorCode)
+            .WithMessage(creationInfoIsRequiredErrorMessage);
     }
     public void AddCreationInfoIsValidSpecification(AbstractValidator<TDomainEntity> validator)
     {
@@ -95,42 +95,38 @@ public abstract class DomainEntitySpecificationsBase<TDomainEntity>
                 && domainEntity.AuditableInfo.CreatedBy.Length <= 250
             )
             .When(domainEntity => CheckCreationInfoIsRequired(domainEntity))
-            .WithSeverity(CREATION_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
-            .WithErrorCode(CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE)
-            .WithMessage(CREATION_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
+            .WithSeverity(creationInfoShouldBeValidErrorSeverity)
+            .WithErrorCode(creationInfoShouldBeValidErrorCode)
+            .WithMessage(creationInfoShouldBeValidErrorMessage);
     }
-    
     public void AddUpdateInfoIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
     {
         validator.RuleFor(domainEntity => domainEntity)
             .Must(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
-            .WithSeverity(UPDATE_INFO_IS_REQUIRED_ERROR_SEVERITY)
-            .WithErrorCode(UPDATE_INFO_IS_REQUIRED_ERROR_CODE)
-            .WithMessage(UPDATE_INFO_IS_REQUIRED_ERROR_MESSAGE);
+            .WithSeverity(updateInfoIsRequiredErrorSeverity)
+            .WithErrorCode(updateInfoIsRequiredErrorCode)
+            .WithMessage(updateInfoIsRequiredErrorMessage);
     }
     public void AddUpdateInfoIsValidSpecification(AbstractValidator<TDomainEntity> validator)
     {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
         validator.RuleFor(domainEntity => domainEntity)
             .Must(domainEntity => 
                 domainEntity.AuditableInfo.LastUpdatedAt >= domainEntity.AuditableInfo.CreatedAt
                 && domainEntity.AuditableInfo.LastUpdatedAt <= DateTimeProvider.GetDate()
                 && domainEntity.AuditableInfo.LastUpdatedBy.Length <= 250
             )
-            .When(domainEntity => DomainEntitySpecificationsBase<TDomainEntity>.CheckUpdateInfoIsRequired(domainEntity))
-            .WithSeverity(UPDATE_INFO_SHOULD_BE_VALID_ERROR_SEVERITY)
-            .WithErrorCode(UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE)
-            .WithMessage(UPDATE_INFO_SHOULD_BE_VALID_ERROR_MESSAGE);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            .When(domainEntity => CheckUpdateInfoIsRequired(domainEntity))
+            .WithSeverity(updateInfoShouldBeValidErrorSeverity)
+            .WithErrorCode(updateInfoShouldBeValidErrorCode)
+            .WithMessage(updateInfoShouldBeValidErrorMessage);
     }
-    
     public void AddRegistryVersionIsRequiredSpecification(AbstractValidator<TDomainEntity> validator)
     {
         validator.RuleFor(domainEntity => domainEntity.RegistryVersion)
             .Must(registryVersion => CheckRegistryVersionIsRequired(registryVersion))
-            .WithSeverity(REGISTRY_VERSION_IS_REQUIRED_ERROR_SEVERITY)
-            .WithErrorCode(REGISTRY_VERSION_IS_REQUIRED_ERROR_CODE)
-            .WithMessage(REGISTRY_VERSION_IS_REQUIRED_ERROR_MESSAGE);
+            .WithSeverity(registryVersionIsRequiredErrorSeverity)
+            .WithErrorCode(registryVersionIsRequiredErrorCode)
+            .WithMessage(registryVersionIsRequiredErrorMessage);
     }
     public void AddRegistryVersionIsValidSpecification(AbstractValidator<TDomainEntity> validator)
     {
@@ -140,8 +136,8 @@ public abstract class DomainEntitySpecificationsBase<TDomainEntity>
                 && domainEntity.RegistryVersion >= (domainEntity.AuditableInfo.LastUpdatedAt ?? default)
             )
             .When(domainEntity => CheckRegistryVersionIsRequired(domainEntity.RegistryVersion))
-            .WithSeverity(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_SEVERITY)
-            .WithErrorCode(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE)
-            .WithMessage(REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_MESSAGE);
+            .WithSeverity(registryVersionShouldBeValidErrorSeverity)
+            .WithErrorCode(registryVersionShouldBeValidErrorCode)
+            .WithMessage(registryVersionShouldBeValidErrorMessage);
     }
 }

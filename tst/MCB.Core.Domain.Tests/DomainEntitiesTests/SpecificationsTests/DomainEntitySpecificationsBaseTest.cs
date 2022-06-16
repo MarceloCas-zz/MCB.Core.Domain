@@ -35,7 +35,7 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResult.Should().NotBeNull();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.ID_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.idIsRequiredErrorCode
         ).Should().BeNull();
     }
     [Fact]
@@ -53,7 +53,7 @@ public class DomainEntitySpecificationsBaseTest
         validationResult.Should().NotBeNull();
         validationResult.IsValid.Should().BeFalse();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.ID_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.idIsRequiredErrorCode
         ).Should().NotBeNull();
     }
 
@@ -71,7 +71,7 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResult.Should().NotBeNull();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.TENANT_ID_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.tenantIdIsRequiredErrorCode
         ).Should().BeNull();
     }
     [Fact]
@@ -89,7 +89,7 @@ public class DomainEntitySpecificationsBaseTest
         validationResult.Should().NotBeNull();
         validationResult.IsValid.Should().BeFalse();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.TENANT_ID_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.tenantIdIsRequiredErrorCode
         ).Should().NotBeNull();
     }
 
@@ -110,7 +110,7 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResult.Should().NotBeNull();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.CREATION_INFO_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.creationInfoIsRequiredErrorCode
         ).Should().BeNull();
     }
     [Fact]
@@ -136,12 +136,12 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResultA.Should().NotBeNull();
         validationResultA.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.CREATION_INFO_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.creationInfoIsRequiredErrorCode
         ).Should().NotBeNull();
 
         validationResultB.Should().NotBeNull();
         validationResultB.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.CREATION_INFO_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.creationInfoIsRequiredErrorCode
         ).Should().NotBeNull();
     }
 
@@ -162,7 +162,7 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResult.Should().NotBeNull();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.creationInfoShouldBeValidErrorCode
         ).Should().BeNull();
     }
     [Fact]
@@ -188,12 +188,12 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResultA.Should().NotBeNull();
         validationResultA.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.creationInfoShouldBeValidErrorCode
         ).Should().NotBeNull();
 
         validationResultB.Should().NotBeNull();
         validationResultB.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.CREATION_INFO_SHOULD_BE_VALID_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.creationInfoShouldBeValidErrorCode
         ).Should().NotBeNull();
     }
 
@@ -287,7 +287,7 @@ public class DomainEntitySpecificationsBaseTest
         {
             validationResult.Should().NotBeNull();
             validationResult.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
+                q => q.ErrorCode == DomainEntitySpecificationsBase.updateInfoShouldBeValidErrorCode
             ).Should().BeNull();
         }
     }
@@ -369,7 +369,7 @@ public class DomainEntitySpecificationsBaseTest
         {
             validationResult.Should().NotBeNull();
             validationResult.Errors.FirstOrDefault(
-                q => q.ErrorCode == DomainEntitySpecificationsBase.UPDATE_INFO_SHOULD_BE_VALID_ERROR_CODE
+                q => q.ErrorCode == DomainEntitySpecificationsBase.updateInfoShouldBeValidErrorCode
             ).Should().NotBeNull();
         }
     }
@@ -388,7 +388,7 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResult.Should().NotBeNull();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.REGISTRY_VERSION_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.registryVersionIsRequiredErrorCode
         ).Should().BeNull();
     }
     [Fact]
@@ -407,7 +407,7 @@ public class DomainEntitySpecificationsBaseTest
         validationResult.Should().NotBeNull();
         validationResult.IsValid.Should().BeFalse();
         validationResult.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.REGISTRY_VERSION_IS_REQUIRED_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.registryVersionIsRequiredErrorCode
         ).Should().NotBeNull();
     }
 
@@ -435,7 +435,7 @@ public class DomainEntitySpecificationsBaseTest
         // Assert
         validationResultB.Should().NotBeNull();
         validationResultB.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.registryVersionShouldBeValidErrorCode
         ).Should().BeNull();
     }
     [Fact]
@@ -463,13 +463,13 @@ public class DomainEntitySpecificationsBaseTest
         validationResultA.Should().NotBeNull();
         validationResultA.IsValid.Should().BeFalse();
         validationResultA.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.registryVersionShouldBeValidErrorCode
         ).Should().NotBeNull();
 
         validationResultB.Should().NotBeNull();
         validationResultB.IsValid.Should().BeFalse();
         validationResultB.Errors.FirstOrDefault(
-            q => q.ErrorCode == DomainEntitySpecificationsBase.REGISTRY_VERSION_SHOULD_BE_VALID_ERROR_CODE
+            q => q.ErrorCode == DomainEntitySpecificationsBase.registryVersionShouldBeValidErrorCode
         ).Should().NotBeNull();
     }
 }
