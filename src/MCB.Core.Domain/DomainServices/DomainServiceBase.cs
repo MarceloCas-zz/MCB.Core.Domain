@@ -5,7 +5,6 @@ using MCB.Core.Domain.Entities.Abstractions;
 using MCB.Core.Infra.CrossCutting.Serialization;
 
 namespace MCB.Core.Domain.DomainServices;
-
 public abstract class DomainServiceBase<TAggregationRoot>
     : IDomainService<TAggregationRoot>
     where TAggregationRoot : IAggregationRoot
@@ -40,11 +39,7 @@ public abstract class DomainServiceBase<TAggregationRoot>
     {
         ValidateEventData(eventData);
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-        // ValidateEventData method check is eventData is null
         var eventDataType = eventData.GetType();
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-
         var domainEvent = new DomainEvent
         {
             TenantId = tenantId,
