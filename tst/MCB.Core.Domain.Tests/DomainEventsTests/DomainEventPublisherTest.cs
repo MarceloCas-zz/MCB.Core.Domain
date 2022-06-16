@@ -75,7 +75,7 @@ namespace MCB.Core.Domain.Tests.DomainEventsTests
         }
     }
 
-    public class DummyDomainEvent
+    public record DummyDomainEvent
         : DomainEvent
     {
         public Guid Id { get; set; }
