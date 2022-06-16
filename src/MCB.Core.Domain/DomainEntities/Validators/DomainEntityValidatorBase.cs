@@ -34,6 +34,7 @@ public abstract class DomainEntityValidatorBase<TDomainEntity>
     protected void AddSpecificationsForUpdate()
     {
         AddSpecificationsForCreation();
+
         _domainEntitySpecifications.AddUpdateInfoIsRequiredSpecification(FluentValidationValidatorWrapperInstance);
         _domainEntitySpecifications.AddUpdateInfoIsValidSpecification(FluentValidationValidatorWrapperInstance);
     }

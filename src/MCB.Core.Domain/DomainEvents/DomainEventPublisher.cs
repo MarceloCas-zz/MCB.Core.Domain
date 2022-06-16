@@ -9,7 +9,7 @@ public class DomainEventPublisher
     IDomainEventPublisher
 {
     // Constants
-    public const string SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE = "Subscriber cannot be initialized";
+    public static readonly string subscriberCanotBeInitializedErrorMessage = "Subscriber cannot be initialized";
 
     // Fields
     private readonly IServiceProvider _serviceProvider;
@@ -26,7 +26,7 @@ public class DomainEventPublisher
         var subscriber = _serviceProvider.GetService(subscriberType);
 
         if (subscriber is null)
-            throw new InvalidOperationException(SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE);
+            throw new InvalidOperationException(subscriberCanotBeInitializedErrorMessage);
 
         return (ISubscriber<TSubject>)subscriber;
     }

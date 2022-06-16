@@ -71,7 +71,7 @@ public class DomainEventPublisherTest
         }
 
         // Assert
-        exceptionMessage.Should().Be(DomainEventPublisher.SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE);
+        exceptionMessage.Should().Be(DomainEventPublisher.subscriberCanotBeInitializedErrorMessage);
     }
 }
 

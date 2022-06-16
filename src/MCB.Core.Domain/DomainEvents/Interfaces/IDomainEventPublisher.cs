@@ -4,6 +4,5 @@ namespace MCB.Core.Domain.DomainEvents.Interfaces;
 
 public interface IDomainEventPublisher
     : IPublisher
-
 {
 }
