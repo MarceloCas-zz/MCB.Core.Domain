@@ -6,30 +6,29 @@ using MCB.Core.Domain.DomainNotifications;
 using MCB.Core.Domain.DomainNotifications.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MCB.Core.Domain.IoC
+namespace MCB.Core.Domain.IoC;
+
+public static class Bootstrapper
 {
-    public static class Bootstrapper
+    public static void ConfigureServices(IServiceCollection services)
     {
-        public static void ConfigureServices(IServiceCollection services)
+        // Domain Events
+        services.AddScoped<IDomainEventHandler, DomainEventHandler>();
+        services.AddScoped<IDomainEventPublisher, DomainEventPublisher>(serviceProvider => {
+            var domainEventPublisher = new DomainEventPublisher(serviceProvider);
+            domainEventPublisher.Subscribe<IDomainEventHandler, DomainEvent>();
+
+            return domainEventPublisher;
+        });
+
+        // Domain Notifications
+        services.AddScoped<IDomainNotificationHandler, DomainNotificationHandler>();
+        services.AddScoped<IDomainNotificationPublisher, DomainNotificationPublisher>(serviceProvider => 
         {
-            // Domain Events
-            services.AddScoped<IDomainEventHandler, DomainEventHandler>();
-            services.AddScoped<IDomainEventPublisher, DomainEventPublisher>(serviceProvider => {
-                var domainEventPublisher = new DomainEventPublisher(serviceProvider);
-                domainEventPublisher.Subscribe<IDomainEventHandler, DomainEvent>();
+            var domainEventPublisher = new DomainNotificationPublisher(serviceProvider);
+            domainEventPublisher.Subscribe<IDomainNotificationHandler, DomainNotification>();
 
-                return domainEventPublisher;
-            });
-
-            // Domain Notifications
-            services.AddScoped<IDomainNotificationHandler, DomainNotificationHandler>();
-            services.AddScoped<IDomainNotificationPublisher, DomainNotificationPublisher>(serviceProvider => 
-            {
-                var domainEventPublisher = new DomainNotificationPublisher(serviceProvider);
-                domainEventPublisher.Subscribe<IDomainNotificationHandler, DomainNotification>();
-
-                return domainEventPublisher;
-            });
-        }
+            return domainEventPublisher;
+        });
     }
 }

@@ -7,120 +7,119 @@ using MCB.Core.Infra.CrossCutting.DateTime;
 using System;
 using Xunit;
 
-namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests
+namespace MCB.Core.Domain.Tests.DomainEntitiesTests.ValidatorsTests;
+
+public class DomainEntityValidatorBaseTest
 {
-    public class DomainEntityValidatorBaseTest
+    [Fact]
+    public void DomainEntitySpecificationsBase_Should_Validate_Creation_Info()
     {
-        [Fact]
-        public void DomainEntitySpecificationsBase_Should_Validate_Creation_Info()
-        {
-            // Arrange
-            var customer = new Customer().SetExistingInfoExposed(
-                id: Guid.NewGuid(),
-                tenantId: Guid.NewGuid(),
-                createdBy: "marcelo.castelo@outlook.com",
-                createdAt: DateTimeProvider.GetDate(),
-                sourcePlatform: "unitTest",
-                registryVersion: DateTimeProvider.GetDate()
-            );
-            var customerValidatorisValidToCreate = new CustomerValidatorisValidToCreate(new CustomerSpecifications());
+        // Arrange
+        var customer = new Customer().SetExistingInfoExposed(
+            id: Guid.NewGuid(),
+            tenantId: Guid.NewGuid(),
+            createdBy: "marcelo.castelo@outlook.com",
+            createdAt: DateTimeProvider.GetDate(),
+            sourcePlatform: "unitTest",
+            registryVersion: DateTimeProvider.GetDate()
+        );
+        var customerValidatorisValidToCreate = new CustomerValidatorisValidToCreate(new CustomerSpecifications());
 
-            // Act
-            var validationResult = customerValidatorisValidToCreate.Validate(customer);
+        // Act
+        var validationResult = customerValidatorisValidToCreate.Validate(customer);
 
-            // Assert
-            validationResult.IsValid.Should().BeTrue();
-        }
-        [Fact]
-        public void DomainEntitySpecificationsBase_Should_Validate_Update_Info()
-        {
-            // Arrange
-            var customer = new Customer().SetExistingInfoExposed(
-                id: Guid.NewGuid(),
-                tenantId: Guid.NewGuid(),
-                createdBy: "marcelo.castelo@outlook.com",
-                createdAt: DateTimeProvider.GetDate(),
-                updatedBy: "marcelo.castelo@outlook.com",
-                updatedAt: DateTimeProvider.GetDate(),
-                sourcePlatform: "unitTest",
-                registryVersion: DateTimeProvider.GetDate()
-            );
-            var customerValidatorisValidToCreate = new CustomerValidatorisValidToUpdate(new CustomerSpecifications());
+        // Assert
+        validationResult.IsValid.Should().BeTrue();
+    }
+    [Fact]
+    public void DomainEntitySpecificationsBase_Should_Validate_Update_Info()
+    {
+        // Arrange
+        var customer = new Customer().SetExistingInfoExposed(
+            id: Guid.NewGuid(),
+            tenantId: Guid.NewGuid(),
+            createdBy: "marcelo.castelo@outlook.com",
+            createdAt: DateTimeProvider.GetDate(),
+            updatedBy: "marcelo.castelo@outlook.com",
+            updatedAt: DateTimeProvider.GetDate(),
+            sourcePlatform: "unitTest",
+            registryVersion: DateTimeProvider.GetDate()
+        );
+        var customerValidatorisValidToCreate = new CustomerValidatorisValidToUpdate(new CustomerSpecifications());
 
-            // Act
-            var validationResult = customerValidatorisValidToCreate.Validate(customer);
+        // Act
+        var validationResult = customerValidatorisValidToCreate.Validate(customer);
 
-            // Assert
-            validationResult.IsValid.Should().BeTrue();
-        }
+        // Assert
+        validationResult.IsValid.Should().BeTrue();
+    }
+}
+
+public class Customer
+    : DomainEntityBase
+{
+    public Customer SetExistingInfoExposed(
+        Guid id = default,
+        Guid tenantId = default,
+        string createdBy = default,
+        DateTimeOffset createdAt = default,
+        string updatedBy = default,
+        DateTimeOffset? updatedAt = default,
+        string sourcePlatform = default,
+        DateTimeOffset registryVersion = default
+    )
+    {
+        SetExistingInfoInternal<Customer>(
+            id,
+            tenantId,
+            createdBy,
+            createdAt,
+            updatedBy,
+            updatedAt,
+            sourcePlatform,
+            registryVersion
+        );
+
+        return this;
     }
 
-    public class Customer
-        : DomainEntityBase
+    protected override DomainEntityBase CreateInstanceForCloneInternal()
     {
-        public Customer SetExistingInfoExposed(
-            Guid id = default,
-            Guid tenantId = default,
-            string createdBy = default,
-            DateTimeOffset createdAt = default,
-            string updatedBy = default,
-            DateTimeOffset? updatedAt = default,
-            string sourcePlatform = default,
-            DateTimeOffset registryVersion = default
-        )
-        {
-            SetExistingInfoInternal<Customer>(
-                id,
-                tenantId,
-                createdBy,
-                createdAt,
-                updatedBy,
-                updatedAt,
-                sourcePlatform,
-                registryVersion
-            );
-
-            return this;
-        }
-
-        protected override DomainEntityBase CreateInstanceForCloneInternal()
-        {
-            return new Customer();
-        }
+        return new Customer();
     }
-    public class CustomerSpecifications
-        : DomainEntitySpecificationsBase<Customer>
+}
+public class CustomerSpecifications
+    : DomainEntitySpecificationsBase<Customer>
+{
+
+}
+public class CustomerValidatorisValidToCreate
+    : DomainEntityValidatorBase<Customer>
+{
+    public CustomerValidatorisValidToCreate(
+        IDomainEntitySpecifications<Customer> domainEntitySpecifications
+    ) : base(domainEntitySpecifications)
     {
 
     }
-    public class CustomerValidatorisValidToCreate
-        : DomainEntityValidatorBase<Customer>
+
+    protected override void ConfigureFluentValidationConcreteValidator(FluentValidationValidatorWrapper fluentValidationValidatorWrapper)
     {
-        public CustomerValidatorisValidToCreate(
-            IDomainEntitySpecifications<Customer> domainEntitySpecifications
-        ) : base(domainEntitySpecifications)
-        {
-
-        }
-
-        protected override void ConfigureFluentValidationConcreteValidator(FluentValidationValidatorWrapper fluentValidationValidatorWrapper)
-        {
-            AddSpecificationsForCreation();
-        }
+        AddSpecificationsForCreation();
     }
-    public class CustomerValidatorisValidToUpdate
-        : DomainEntityValidatorBase<Customer>
+}
+public class CustomerValidatorisValidToUpdate
+    : DomainEntityValidatorBase<Customer>
+{
+    public CustomerValidatorisValidToUpdate(
+        IDomainEntitySpecifications<Customer> domainEntitySpecifications
+    ) : base(domainEntitySpecifications)
     {
-        public CustomerValidatorisValidToUpdate(
-            IDomainEntitySpecifications<Customer> domainEntitySpecifications
-        ) : base(domainEntitySpecifications)
-        {
 
-        }
+    }
 
-        protected override void ConfigureFluentValidationConcreteValidator(FluentValidationValidatorWrapper fluentValidationValidatorWrapper)
-        {
-            AddSpecificationsForUpdate();
-        }
+    protected override void ConfigureFluentValidationConcreteValidator(FluentValidationValidatorWrapper fluentValidationValidatorWrapper)
+    {
+        AddSpecificationsForUpdate();
     }
 }

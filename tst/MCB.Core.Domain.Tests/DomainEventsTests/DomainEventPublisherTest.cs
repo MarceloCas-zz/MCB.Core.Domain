@@ -13,91 +13,90 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace MCB.Core.Domain.Tests.DomainEventsTests
+namespace MCB.Core.Domain.Tests.DomainEventsTests;
+
+[Collection(nameof(DefaultFixture))]
+public class DomainEventPublisherTest
 {
-    [Collection(nameof(DefaultFixture))]
-    public class DomainEventPublisherTest
+    // Fields
+    private readonly DefaultFixture _fixture;
+
+    // Constructors
+    public DomainEventPublisherTest(DefaultFixture fixture)
     {
-        // Fields
-        private readonly DefaultFixture _fixture;
+        _fixture = fixture;
+    }
 
-        // Constructors
-        public DomainEventPublisherTest(DefaultFixture fixture)
+    [Fact]
+    public async Task DomainEventPublisher_Should_Publish()
+    {
+        // Arrange
+        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
+        var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
+        var domainEventHandler = scopedServiceProvider.GetService<IDomainEventHandler>();
+        var domainEvent = new DomainEvent
         {
-            _fixture = fixture;
-        }
+            EventData = new DummyDomainEvent().SerializeToJson()
+        };
 
-        [Fact]
-        public async Task DomainEventPublisher_Should_Publish()
+        // Act
+        await domainEventPublisher.PublishAsync(domainEvent, cancellationToken: default);
+
+        // Assert
+        domainEventHandler.ReceivedDomainEventsCollection.Should().HaveCount(1);
+        domainEventHandler.HasDomainEvents().Should().BeTrue();
+        var receivedDomainEventsCollection = domainEventHandler.ReceivedDomainEventsCollection.ToArray();
+        receivedDomainEventsCollection[0].Should().BeSameAs(domainEvent);
+    }
+
+    [Fact]
+    public async Task DomainEventPublisher_Should_Throw_Exception_If_No_Subscribe_Registered_In_IoC()
+    {
+        // Arrange
+        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
+        var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
+        domainEventPublisher.Subscribe<UnregisteredDomainEventHandler, DummyDomainEvent>();
+
+        var domainEvent = new DummyDomainEvent();
+        var exceptionMessage = string.Empty;
+
+        // Act
+        try
         {
-            // Arrange
-            var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-            var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
-            var domainEventHandler = scopedServiceProvider.GetService<IDomainEventHandler>();
-            var domainEvent = new DomainEvent
-            {
-                EventData = new DummyDomainEvent().SerializeToJson()
-            };
-
-            // Act
             await domainEventPublisher.PublishAsync(domainEvent, cancellationToken: default);
-
-            // Assert
-            domainEventHandler.ReceivedDomainEventsCollection.Should().HaveCount(1);
-            domainEventHandler.HasDomainEvents().Should().BeTrue();
-            var receivedDomainEventsCollection = domainEventHandler.ReceivedDomainEventsCollection.ToArray();
-            receivedDomainEventsCollection[0].Should().BeSameAs(domainEvent);
         }
-
-        [Fact]
-        public async Task DomainEventPublisher_Should_Throw_Exception_If_No_Subscribe_Registered_In_IoC()
+        catch (InvalidOperationException ex)
         {
-            // Arrange
-            var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-            var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
-            domainEventPublisher.Subscribe<UnregisteredDomainEventHandler, DummyDomainEvent>();
-
-            var domainEvent = new DummyDomainEvent();
-            var exceptionMessage = string.Empty;
-
-            // Act
-            try
-            {
-                await domainEventPublisher.PublishAsync(domainEvent, cancellationToken: default);
-            }
-            catch (InvalidOperationException ex)
-            {
-                exceptionMessage = ex.Message;
-            }
-
-            // Assert
-            exceptionMessage.Should().Be(DomainEventPublisher.SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE);
+            exceptionMessage = ex.Message;
         }
+
+        // Assert
+        exceptionMessage.Should().Be(DomainEventPublisher.SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE);
+    }
+}
+
+public record DummyDomainEvent
+    : DomainEvent
+{
+    public Guid Id { get; set; }
+
+    public DummyDomainEvent()
+    {
+        Id = Guid.NewGuid();
+    }
+}
+public class UnregisteredDomainEventHandler
+    : IDomainEventHandler<DummyDomainEvent>
+{
+    public IEnumerable<DummyDomainEvent> ReceivedDomainEventsCollection => throw new NotImplementedException();
+
+    public Task HandlerAsync(DummyDomainEvent subject, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
-    public record DummyDomainEvent
-        : DomainEvent
+    public bool HasDomainEvents()
     {
-        public Guid Id { get; set; }
-
-        public DummyDomainEvent()
-        {
-            Id = Guid.NewGuid();
-        }
-    }
-    public class UnregisteredDomainEventHandler
-        : IDomainEventHandler<DummyDomainEvent>
-    {
-        public IEnumerable<DummyDomainEvent> ReceivedDomainEventsCollection => throw new NotImplementedException();
-
-        public Task HandlerAsync(DummyDomainEvent subject, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool HasDomainEvents()
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

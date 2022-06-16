@@ -2,33 +2,32 @@
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Observer;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Observer;
 
-namespace MCB.Core.Domain.DomainEvents
+namespace MCB.Core.Domain.DomainEvents;
+
+public class DomainEventPublisher
+    : PublisherBase,
+    IDomainEventPublisher
 {
-    public class DomainEventPublisher
-        : PublisherBase,
-        IDomainEventPublisher
+    // Constants
+    public const string SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE = "Subscriber cannot be initialized";
+
+    // Fields
+    private readonly IServiceProvider _serviceProvider;
+
+    // Constructors
+    public DomainEventPublisher(IServiceProvider serviceProvider)
     {
-        // Constants
-        public const string SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE = "Subscriber cannot be initialized";
+        _serviceProvider = serviceProvider;
+    }
 
-        // Fields
-        private readonly IServiceProvider _serviceProvider;
+    // Protected Methods
+    protected override ISubscriber<TSubject> InstanciateSubscriber<TSubject>(Type subscriberType)
+    {
+        var subscriber = _serviceProvider.GetService(subscriberType);
 
-        // Constructors
-        public DomainEventPublisher(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        if (subscriber is null)
+            throw new InvalidOperationException(SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE);
 
-        // Protected Methods
-        protected override ISubscriber<TSubject> InstanciateSubscriber<TSubject>(Type subscriberType)
-        {
-            var subscriber = _serviceProvider.GetService(subscriberType);
-
-            if (subscriber is null)
-                throw new InvalidOperationException(SUBSCRIBER_CANOT_BE_INITIALIZED_ERROR_MESSAGE);
-
-            return (ISubscriber<TSubject>)subscriber;
-        }
+        return (ISubscriber<TSubject>)subscriber;
     }
 }
