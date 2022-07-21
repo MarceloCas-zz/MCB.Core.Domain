@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Xunit;
 using MCB.Core.Infra.CrossCutting.Serialization;
 using FluentAssertions;
+using MCB.Core.Domain.Entities.DomainEntitiesBase;
 
 namespace MCB.Core.Domain.Tests.DomainServicesTests;
 
