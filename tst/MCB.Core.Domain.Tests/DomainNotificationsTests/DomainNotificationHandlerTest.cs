@@ -28,9 +28,11 @@ public class DomainNotificationHandlerTest
     public async Task DomainNotificationHandler_Should_Handler_Domain_Events()
     {
         // Arrange
-        var scopedServiceProvider = _defaultFixture.ServiceProvider.CreateScope().ServiceProvider;
-        var domainNotificationPublisher = scopedServiceProvider.GetService<IDomainNotificationPublisher>();
-        var domainNotificationHandler = scopedServiceProvider.GetService<IDomainNotificationHandler>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var domainNotificationPublisher = dependencyInjectionContainer.Resolve<IDomainNotificationPublisher>();
+        var domainNotificationHandler = dependencyInjectionContainer.Resolve<IDomainNotificationHandler>();
 
         var domainNotificationToSendCollection = new List<DomainNotification>();
         for (int i = 0; i < 10; i++)

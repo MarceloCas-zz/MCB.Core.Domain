@@ -1,5 +1,8 @@
 ﻿using MCB.Core.Domain.Tests.DomainServicesTests;
 using MCB.Core.Infra.CrossCutting.DateTime;
+using MCB.Core.Infra.CrossCutting.DependencyInjection.Abstractions.Interfaces;
+using MCB.Core.Infra.CrossCutting.DependencyInjection;
+using MCB.Tests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Xunit;
@@ -13,25 +16,22 @@ public class DefaultFixtureCollection
 
 }
 public class DefaultFixture
+    : FixtureBase
 {
-    // Properties
-    public IServiceProvider ServiceProvider { get; }
-    public DateTimeOffset InjectedUtcNow = new DateTimeOffset(DateTime.SpecifyKind(new DateTime(2022, 1, 1), DateTimeKind.Utc));
-
-    // Constructors
-    public DefaultFixture()
+    // Protected Methods
+    protected override IDependencyInjectionContainer CreateDependencyInjectionContainerInternal()
     {
-        DateTimeProvider.GetDateCustomFunction = new Func<DateTimeOffset>(() => InjectedUtcNow);
+        return new DependencyInjectionContainer();
+    }
+    protected override void BuildDependencyInjectionContainerInternal(IDependencyInjectionContainer dependencyInjectionContainer)
+    {
+        ((DependencyInjectionContainer)dependencyInjectionContainer).Build();
+    }
+    protected override void ConfigureDependencyInjectionContainerInternal(IDependencyInjectionContainer dependencyInjectionContainer)
+    {
+        dependencyInjectionContainer.RegisterScoped<ICustomerDomainService, CustomerDomainService>();
 
-        var services = new ServiceCollection();
-        ConfigureServices(services);
-        ServiceProvider = services.BuildServiceProvider();
+        IoC.Bootstrapper.ConfigureServices(dependencyInjectionContainer);
     }
 
-    // Private Methods
-    private static void ConfigureServices(IServiceCollection services)
-    {
-        IoC.Bootstrapper.ConfigureServices(services);
-        services.AddScoped<ICustomerDomainService, CustomerDomainService>();
-    }
 }

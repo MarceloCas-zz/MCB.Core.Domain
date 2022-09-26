@@ -27,9 +27,11 @@ public class DomainEventHandlerTest
     public async Task DomainEventHandler_Should_Handler_Domain_Events()
     {
         // Arrange
-        var scopedServiceProvider = _defaultFixture.ServiceProvider.CreateScope().ServiceProvider;
-        var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
-        var domainEventHandler = scopedServiceProvider.GetService<IDomainEventHandler>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var domainEventPublisher = dependencyInjectionContainer.Resolve<IDomainEventPublisher>();
+        var domainEventHandler = dependencyInjectionContainer.Resolve<IDomainEventHandler>();
 
         var domainEventToSendCollection = new List<DomainEvent>();
         for (int i = 0; i < 10; i++)

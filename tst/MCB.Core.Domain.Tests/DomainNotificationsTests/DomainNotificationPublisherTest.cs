@@ -18,21 +18,23 @@ namespace MCB.Core.Domain.Tests.DomainNotificationsTests;
 public class DomainNotificationPublisherTest
 {
     // Fields
-    private readonly DefaultFixture _fixture;
+    private readonly DefaultFixture _defaultFixture;
 
     // Constructors
-    public DomainNotificationPublisherTest(DefaultFixture fixture)
+    public DomainNotificationPublisherTest(DefaultFixture defaultFixture)
     {
-        _fixture = fixture;
+        _defaultFixture = defaultFixture;
     }
 
     [Fact]
     public async Task DomainNotificationPublisher_Should_Publish()
     {
         // Arrange
-        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-        var domainNotificationPublisher = scopedServiceProvider.GetService<IDomainNotificationPublisher>();
-        var domainNotificationHandler = scopedServiceProvider.GetService<IDomainNotificationHandler>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var domainNotificationPublisher = dependencyInjectionContainer.Resolve<IDomainNotificationPublisher>();
+        var domainNotificationHandler = dependencyInjectionContainer.Resolve<IDomainNotificationHandler>();
         var domainNotification = new DomainNotification(
             domainNotificationType: DomainNotificationType.Information,
             domainEntityTypeFullName: default,
@@ -54,8 +56,10 @@ public class DomainNotificationPublisherTest
     public async Task DomainNotificationPublisher_Should_Throw_Exception_If_No_Subscribe_Registered_In_IoC()
     {
         // Arrange
-        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-        var domainEventPublisher = scopedServiceProvider.GetService<IDomainNotificationPublisher>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var domainEventPublisher = dependencyInjectionContainer.Resolve<IDomainNotificationPublisher>();
         domainEventPublisher.Subscribe<UnregisteredDomainNotificationHandler, DomainNotification>();
         var domainNotification = new DomainNotification(
             domainNotificationType: DomainNotificationType.Information,

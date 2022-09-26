@@ -19,21 +19,23 @@ namespace MCB.Core.Domain.Tests.DomainEventsTests;
 public class DomainEventPublisherTest
 {
     // Fields
-    private readonly DefaultFixture _fixture;
+    private readonly DefaultFixture _defaultFixture;
 
     // Constructors
-    public DomainEventPublisherTest(DefaultFixture fixture)
+    public DomainEventPublisherTest(DefaultFixture defaultFixture)
     {
-        _fixture = fixture;
+        _defaultFixture = defaultFixture;
     }
 
     [Fact]
     public async Task DomainEventPublisher_Should_Publish()
     {
         // Arrange
-        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-        var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
-        var domainEventHandler = scopedServiceProvider.GetService<IDomainEventHandler>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var domainEventPublisher = dependencyInjectionContainer.Resolve<IDomainEventPublisher>();
+        var domainEventHandler = dependencyInjectionContainer.Resolve<IDomainEventHandler>();
         var domainEvent = new DomainEvent
         {
             EventData = new DummyDomainEvent().SerializeToJson()
@@ -53,8 +55,10 @@ public class DomainEventPublisherTest
     public async Task DomainEventPublisher_Should_Throw_Exception_If_No_Subscribe_Registered_In_IoC()
     {
         // Arrange
-        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-        var domainEventPublisher = scopedServiceProvider.GetService<IDomainEventPublisher>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var domainEventPublisher = dependencyInjectionContainer.Resolve<IDomainEventPublisher>();
         domainEventPublisher.Subscribe<UnregisteredDomainEventHandler, DummyDomainEvent>();
 
         var domainEvent = new DummyDomainEvent();

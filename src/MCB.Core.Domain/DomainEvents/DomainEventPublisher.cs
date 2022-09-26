@@ -1,4 +1,5 @@
 ﻿using MCB.Core.Domain.DomainEvents.Interfaces;
+using MCB.Core.Infra.CrossCutting.DependencyInjection.Abstractions.Interfaces;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Observer;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Observer;
 
@@ -12,18 +13,18 @@ public class DomainEventPublisher
     public static readonly string subscriberCanotBeInitializedErrorMessage = "Subscriber cannot be initialized";
 
     // Fields
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IDependencyInjectionContainer _dependencyInjectionContainer;
 
     // Constructors
-    public DomainEventPublisher(IServiceProvider serviceProvider)
+    public DomainEventPublisher(IDependencyInjectionContainer dependencyInjectionContainer)
     {
-        _serviceProvider = serviceProvider;
+        _dependencyInjectionContainer = dependencyInjectionContainer;
     }
 
     // Protected Methods
     protected override ISubscriber<TSubject> InstanciateSubscriber<TSubject>(Type subscriberType)
     {
-        var subscriber = _serviceProvider.GetService(subscriberType);
+        var subscriber = _dependencyInjectionContainer.Resolve(subscriberType);
 
         if (subscriber is null)
             throw new InvalidOperationException(subscriberCanotBeInitializedErrorMessage);

@@ -20,21 +20,23 @@ namespace MCB.Core.Domain.Tests.DomainServicesTests;
 public class DomainServiceBaseTest
 {
     // Fields
-    private readonly DefaultFixture _fixture;
+    private readonly DefaultFixture _defaultFixture;
 
     // Constructors
-    public DomainServiceBaseTest(DefaultFixture fixture)
+    public DomainServiceBaseTest(DefaultFixture defaultFixture)
     {
-        _fixture = fixture;
+        _defaultFixture = defaultFixture;
     }
 
     [Fact]
     public async Task DomainServiceBase_Should_Raise_DomainEvents()
     {
         // Arrange
-        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-        var customerDomainService = scopedServiceProvider.GetService<ICustomerDomainService>();
-        var domainEventHandler = scopedServiceProvider.GetService<IDomainEventHandler>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var customerDomainService = dependencyInjectionContainer.Resolve<ICustomerDomainService>();
+        var domainEventHandler = dependencyInjectionContainer.Resolve<IDomainEventHandler>();
         var tenantId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
         var executionUser = "marcelo.castelo@outlook.com";
@@ -76,8 +78,10 @@ public class DomainServiceBaseTest
     public async Task DomainServiceBase_Should_Not_Raise_DomainEvents_With_Null_EventData()
     {
         // Arrange
-        var scopedServiceProvider = _fixture.ServiceProvider.CreateScope().ServiceProvider;
-        var customerDomainService = scopedServiceProvider.GetService<ICustomerDomainService>();
+        var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+        dependencyInjectionContainer.CreateNewScope();
+
+        var customerDomainService = dependencyInjectionContainer.Resolve<ICustomerDomainService>();
         var tenantId = Guid.NewGuid();
         var correlationId = Guid.NewGuid();
         var executionUser = "marcelo.castelo@outlook.com";
