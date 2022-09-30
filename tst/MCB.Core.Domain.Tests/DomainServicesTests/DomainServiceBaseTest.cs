@@ -1,31 +1,42 @@
 ﻿using MCB.Core.Domain.Abstractions.DomainServices;
 using MCB.Core.Domain.DomainEvents.Interfaces;
 using MCB.Core.Domain.DomainServices;
-using MCB.Core.Domain.Entities;
 using MCB.Core.Domain.Entities.Abstractions;
 using MCB.Core.Domain.Tests.Fixtures;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using MCB.Core.Infra.CrossCutting.Serialization;
 using FluentAssertions;
 using MCB.Core.Domain.Entities.DomainEntitiesBase;
+using MCB.Core.Infra.CrossCutting.Abstractions.DateTime;
+using MCB.Tests;
+using Xunit.Abstractions;
+using MCB.Core.Infra.CrossCutting.Abstractions.Serialization;
+using MCB.Core.Infra.CrossCutting.DateTime;
 
 namespace MCB.Core.Domain.Tests.DomainServicesTests;
 
 [Collection(nameof(DefaultFixture))]
 public class DomainServiceBaseTest
+    : TestBase
 {
     // Fields
     private readonly DefaultFixture _defaultFixture;
 
     // Constructors
-    public DomainServiceBaseTest(DefaultFixture defaultFixture)
+    public DomainServiceBaseTest(
+        ITestOutputHelper testOutputHelper,
+        DefaultFixture defaultFixture
+    ) : base(testOutputHelper)
     {
         _defaultFixture = defaultFixture;
+    }
+
+    protected override IDateTimeProvider CreateDateTimeProvider(DateTimeOffset currentDate)
+    {
+        return new DateTimeProvider();
     }
 
     [Fact]
@@ -41,12 +52,12 @@ public class DomainServiceBaseTest
         var correlationId = Guid.NewGuid();
         var executionUser = "marcelo.castelo@outlook.com";
         var sourcePlatform = "unitTest";
-        var customer = new Customer().RegisterNewExposed(tenantId, executionUser, sourcePlatform);
+        var customer = new Customer(DateTimeProvider).RegisterNewExposed(tenantId, executionUser, sourcePlatform);
         var newCustomerRegisteredEvent = new NewCustomerRegisteredEvent
         {
             Customer = customer
         };
-        var newCustomerRegisteredEventJsonSchema = newCustomerRegisteredEvent.GenerateJsonSchema();
+        var newCustomerRegisteredEventJsonSchema = _defaultFixture.JsonSerializer.GenerateJsonSchema(newCustomerRegisteredEvent);
 
 
         // Act
@@ -69,7 +80,7 @@ public class DomainServiceBaseTest
         receivedDomainEventsCollection[0].CorrelationId.Should().Be(correlationId);
         receivedDomainEventsCollection[0].EventDataType.Should().Be(newCustomerRegisteredEvent.GetType().FullName);
         receivedDomainEventsCollection[0].EventDataSchema.Should().Be(newCustomerRegisteredEventJsonSchema);
-        receivedDomainEventsCollection[0].EventData.Should().Be(newCustomerRegisteredEvent.SerializeToJson());
+        receivedDomainEventsCollection[0].EventData.Should().Be(_defaultFixture.JsonSerializer.SerializeToJson(newCustomerRegisteredEvent));
         receivedDomainEventsCollection[0].ExecutionUser.Should().Be(executionUser);
         receivedDomainEventsCollection[0].SourcePlatform.Should().Be(sourcePlatform);
     }
@@ -79,6 +90,7 @@ public class DomainServiceBaseTest
     {
         // Arrange
         var dependencyInjectionContainer = _defaultFixture.CreateNewDependencyInjectionContainer();
+
         dependencyInjectionContainer.CreateNewScope();
 
         var customerDomainService = dependencyInjectionContainer.Resolve<ICustomerDomainService>();
@@ -109,8 +121,6 @@ public class DomainServiceBaseTest
         // Assert
         exceptionMessage.Should().Be(expectedExceptionMessage);
     }
-
-
 }
 
 public class Customer
@@ -119,6 +129,11 @@ public class Customer
 {
     public const string REGISTER_NEW_MESSAGE_CODE = "REGISTER_NEW_MESSAGE_CODE";
     public const string REGISTER_NEW_MESSAGE_DESCRIPTION = "REGISTER_NEW_MESSAGE_DESCRIPTION";
+
+    public Customer(IDateTimeProvider dateTimeProvider) 
+        : base(dateTimeProvider)
+    {
+    }
 
     public Customer RegisterNewExposed(
         Guid tenantId,
@@ -135,7 +150,7 @@ public class Customer
 
     protected override DomainEntityBase CreateInstanceForCloneInternal()
     {
-        return new Customer();
+        return new Customer(DateTimeProvider);
     }
 }
 public class NewCustomerRegisteredEvent
@@ -152,8 +167,9 @@ public class CustomerDomainService
     ICustomerDomainService
 {
     public CustomerDomainService(
-        IDomainEventPublisher domainEventPublisher
-    ) : base(domainEventPublisher)
+        IDomainEventPublisher domainEventPublisher,
+        IJsonSerializer jsonSerializer
+    ) : base(domainEventPublisher, jsonSerializer)
     {
 
     }

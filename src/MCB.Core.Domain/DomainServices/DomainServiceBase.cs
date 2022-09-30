@@ -2,7 +2,7 @@
 using MCB.Core.Domain.Abstractions.DomainServices;
 using MCB.Core.Domain.DomainEvents.Interfaces;
 using MCB.Core.Domain.Entities.Abstractions;
-using MCB.Core.Infra.CrossCutting.Serialization;
+using MCB.Core.Infra.CrossCutting.Abstractions.Serialization;
 
 namespace MCB.Core.Domain.DomainServices;
 public abstract class DomainServiceBase<TAggregationRoot>
@@ -11,13 +11,16 @@ public abstract class DomainServiceBase<TAggregationRoot>
 {
     // Fields
     private readonly IDomainEventPublisher _domainEventPublisher;
+    private readonly IJsonSerializer _jsonSerializer;
 
     // Constructors
     protected DomainServiceBase(
-        IDomainEventPublisher domainEventPublisher
+        IDomainEventPublisher domainEventPublisher,
+        IJsonSerializer jsonSerializer
     )
     {
         _domainEventPublisher = domainEventPublisher;
+        _jsonSerializer = jsonSerializer;
     }
 
     // Private Methods
@@ -45,8 +48,8 @@ public abstract class DomainServiceBase<TAggregationRoot>
             TenantId = tenantId,
             CorrelationId = correlationId,
             EventDataType = eventDataType.FullName,
-            EventDataSchema = eventDataType.GenerateJsonSchema(),
-            EventData = eventData.SerializeToJson(),
+            EventDataSchema = _jsonSerializer.GenerateJsonSchema(eventDataType),
+            EventData = _jsonSerializer.SerializeToJson(eventData),
             ExecutionUser = executionUser,
             SourcePlatform = sourcePlatform
         };

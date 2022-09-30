@@ -4,7 +4,6 @@ using MCB.Core.Domain.Abstractions.DomainNotifications.Models;
 using MCB.Core.Domain.DomainNotifications;
 using MCB.Core.Domain.DomainNotifications.Interfaces;
 using MCB.Core.Domain.Tests.Fixtures;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -7,9 +7,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C454D410-F44
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{878C6912-708F-4A9C-9F47-E88F4F1892D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCB.Core.Domain", "src\MCB.Core.Domain\MCB.Core.Domain.csproj", "{819553A7-6AB8-4BA3-AE61-2C622645F492}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCB.Core.Domain", "src\MCB.Core.Domain\MCB.Core.Domain.csproj", "{819553A7-6AB8-4BA3-AE61-2C622645F492}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCB.Core.Domain.Tests", "tst\MCB.Core.Domain.Tests\MCB.Core.Domain.Tests.csproj", "{075EB4A3-38D6-4D0E-9871-6E3F0D2954BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCB.Core.Domain.Tests", "tst\MCB.Core.Domain.Tests\MCB.Core.Domain.Tests.csproj", "{075EB4A3-38D6-4D0E-9871-6E3F0D2954BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B67400BB-1C33-48FA-A013-267DE590FDDC}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
+		.github\workflows\pack-and-publish.yml = .github\workflows\pack-and-publish.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -4,8 +4,6 @@ using MCB.Core.Domain.Abstractions.DomainEvents.Models;
 using MCB.Core.Domain.DomainEvents;
 using MCB.Core.Domain.DomainEvents.Interfaces;
 using MCB.Core.Domain.Tests.Fixtures;
-using MCB.Core.Infra.CrossCutting.Serialization;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +36,7 @@ public class DomainEventPublisherTest
         var domainEventHandler = dependencyInjectionContainer.Resolve<IDomainEventHandler>();
         var domainEvent = new DomainEvent
         {
-            EventData = new DummyDomainEvent().SerializeToJson()
+            EventData = _defaultFixture.JsonSerializer.SerializeToJson( new DummyDomainEvent())
         };
 
         // Act
