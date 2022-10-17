@@ -2,7 +2,6 @@
 using MCB.Core.Domain.Abstractions.Repositories;
 using MCB.Core.Domain.Abstractions.Services;
 using MCB.Core.Domain.Entities.Abstractions;
-using MCB.Core.Domain.Entities.DomainEntitiesBase;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Adapter;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Notifications;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Notifications.Models;
@@ -45,7 +44,7 @@ public abstract class ServiceBase<TAggregationRoot>
     }
 
     // Protected Methods
-    protected async Task<bool> ValidateDomainEntityAndSendNotificationsAsync(DomainEntityBase domainEntityBase, CancellationToken cancellationToken)
+    protected async Task<bool> ValidateDomainEntityAndSendNotificationsAsync(IDomainEntity domainEntityBase, CancellationToken cancellationToken)
     {
         foreach (var validationMessage in domainEntityBase.ValidationInfo.ValidationMessageCollection)
             await NotificationPublisher.PublishNotificationAsync(Adapter.Adapt<ValidationMessage, Notification>(validationMessage), cancellationToken);
