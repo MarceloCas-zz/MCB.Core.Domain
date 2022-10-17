@@ -1,34 +1,24 @@
-﻿using MCB.Core.Domain.DomainEvents.Interfaces;
-using MCB.Core.Infra.CrossCutting.DependencyInjection.Abstractions.Interfaces;
-using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Observer;
-using MCB.Core.Infra.CrossCutting.DesignPatterns.Observer;
+﻿using MCB.Core.Domain.Abstractions.DomainEvents;
+using MCB.Core.Domain.DomainEvents.Interfaces;
+using MCB.Core.Domain.Entities.Abstractions.DomainEvents;
 
 namespace MCB.Core.Domain.DomainEvents;
 
-public class DomainEventPublisher
-    : PublisherBase,
-    IDomainEventPublisher
+internal class DomainEventPublisher
+    : IDomainEventPublisher
 {
-    // Constants
-    public static readonly string subscriberCanotBeInitializedErrorMessage = "Subscriber cannot be initialized";
-
     // Fields
-    private readonly IDependencyInjectionContainer _dependencyInjectionContainer;
+    private readonly IDomainEventPublisherInternal _DomainEventPublisherInternal;
 
     // Constructors
-    public DomainEventPublisher(IDependencyInjectionContainer dependencyInjectionContainer)
+    internal DomainEventPublisher(IDomainEventPublisherInternal DomainEventPublisherInternal)
     {
-        _dependencyInjectionContainer = dependencyInjectionContainer;
+        _DomainEventPublisherInternal = DomainEventPublisherInternal;
     }
 
-    // Protected Methods
-    protected override ISubscriber<TSubject> InstanciateSubscriber<TSubject>(Type subscriberType)
+    // Public Methods
+    public Task PublishDomainEventAsync(IDomainEvent DomainEvent, CancellationToken cancellationToken)
     {
-        var subscriber = _dependencyInjectionContainer.Resolve(subscriberType);
-
-        if (subscriber is null)
-            throw new InvalidOperationException(subscriberCanotBeInitializedErrorMessage);
-
-        return (ISubscriber<TSubject>)subscriber;
+        return _DomainEventPublisherInternal.PublishAsync(DomainEvent, cancellationToken);
     }
 }
