@@ -1,7 +1,6 @@
 ﻿using MCB.Core.Domain.Abstractions.DomainEvents;
 using MCB.Core.Domain.Abstractions.Repositories;
 using MCB.Core.Domain.Abstractions.Services;
-using MCB.Core.Domain.DomainEvents.Interfaces;
 using MCB.Core.Domain.Entities.Abstractions;
 using MCB.Core.Domain.Entities.DomainEntitiesBase;
 using MCB.Core.Infra.CrossCutting.DesignPatterns.Abstractions.Adapter;

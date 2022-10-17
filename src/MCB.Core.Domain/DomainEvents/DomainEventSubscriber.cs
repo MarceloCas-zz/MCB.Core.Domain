@@ -1,5 +1,4 @@
 ﻿using MCB.Core.Domain.Abstractions.DomainEvents;
-using MCB.Core.Domain.DomainEvents.Interfaces;
 using MCB.Core.Domain.Entities.Abstractions.DomainEvents;
 using System.Collections.Concurrent;
 
